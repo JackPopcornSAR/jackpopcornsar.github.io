@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PopcornSAR 회사소개 — 장성모터스</title>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap');
+:root {
+  --bg:#0F1419; --bg-card:#1A2332; --bg-card2:#1E293B; --border:#2D3B4E;
+  --text:#E2E8F0; --text-dim:#94A3B8; --text-muted:#64748B;
+  --blue:#3B82F6; --blue-light:#60A5FA; --blue-bg:rgba(59,130,246,.12);
+  --accent:#F59E0B; --accent-bg:rgba(245,158,11,.12);
+  --green:#10B981; --green-bg:rgba(16,185,129,.12);
+  --purple:#8B5CF6; --purple-bg:rgba(139,92,246,.12);
+  --red:#EF4444; --white:#fff; --cyan:#00D4AA;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;word-break:keep-all;overflow-wrap:break-word}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#000;overflow:hidden;color:var(--text)}
+.deck{position:fixed;top:0;left:0;width:100%;height:100%}
+.slide{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:50px 70px;opacity:0;pointer-events:none;transition:opacity .4s;background:var(--bg);overflow-y:auto}
+.slide.active{opacity:1;pointer-events:auto}
+.slide-inner{width:100%;max-width:1200px;position:relative}
+.progress-bar{position:fixed;top:0;left:0;height:4px;background:var(--blue);z-index:100;transition:width .3s}
+.slide-nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:100;background:rgba(26,35,50,.9);padding:10px 24px;border-radius:24px;backdrop-filter:blur(8px);border:1px solid var(--border)}
+.slide-counter{color:var(--text-dim);font-size:16px;font-weight:500;min-width:80px;text-align:center}
+.nav-dots{display:flex;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .2s}
+.dot.active{background:var(--blue);transform:scale(1.3)}
+.nav-hint{position:fixed;bottom:75px;left:50%;transform:translateX(-50%);color:var(--text-muted);font-size:14px;z-index:100;pointer-events:none}
+
+.lang-selector{position:fixed;top:20px;right:40px;display:flex;gap:8px;z-index:100;background:rgba(26,35,50,.9);padding:8px 16px;border-radius:20px;border:1px solid var(--border);backdrop-filter:blur(8px)}
+.lang-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:13px;font-weight:600;padding:4px 10px;border-radius:12px;transition:all .2s}
+.lang-btn.active{background:var(--blue-bg);color:var(--blue-light)}
+.lang-btn:hover{color:var(--text)}
+
+.lang{display:none}
+.lang.active{display:inline}
+
+.slide.cover{background:linear-gradient(135deg,#0B1120 0%,#162035 50%,#1A2744 100%)}
+.slide.section{background:linear-gradient(135deg,#0D1526 0%,#1E3A5F 100%)}
+
+h1{font-size:64px;font-weight:800;line-height:1.25;margin-bottom:24px;letter-spacing:-1.5px}
+h2{font-size:48px;font-weight:700;line-height:1.3;margin-bottom:18px}
+h3{font-size:30px;font-weight:700;margin-bottom:14px}
+.subtitle{font-size:28px;font-weight:300;opacity:.6;margin-bottom:36px}
+.label{font-size:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue-light);margin-bottom:14px}
+.slide.cover .label{color:var(--accent)}
+.slide.section h2{color:var(--accent)}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 40px;margin:20px 0}
+.info-item{display:flex;gap:12px;font-size:22px}
+.info-key{color:var(--text-muted);min-width:160px;font-weight:600;flex-shrink:0}
+.info-val{color:var(--text)}
+
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:22px 0}
+.card-grid.cards-5{grid-template-columns:repeat(2,1fr)}
+.card-grid.cards-5 .card:nth-child(5){grid-column:1/-1;max-width:50%;margin:0 auto}
+.card{background:var(--bg-card);border-radius:18px;padding:30px 32px;border:1px solid var(--border)}
+.card h4{font-size:24px;font-weight:700;color:var(--text);margin-bottom:8px}
+.card p{font-size:20px;color:var(--text-dim);line-height:1.7}
+
+.tag{display:inline-block;padding:5px 16px;border-radius:18px;font-size:16px;font-weight:600;margin:3px}
+.tag-blue{background:var(--blue-bg);color:var(--blue-light)}
+.tag-green{background:var(--green-bg);color:var(--green)}
+.tag-accent{background:var(--accent-bg);color:var(--accent)}
+.tag-purple{background:var(--purple-bg);color:var(--purple)}
+
+.chip-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:10px 18px;font-size:18px;font-weight:600;color:var(--text);white-space:nowrap}
+.chip .chip-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+.stat-row{display:flex;gap:28px;margin:28px 0}
+.stat-box{flex:1;background:var(--bg-card);border-radius:18px;padding:30px;text-align:center;border:1px solid var(--border);border-left:5px solid var(--blue)}
+.stat-box .num{font-size:44px;font-weight:900;color:var(--white)}
+.stat-box .lbl{font-size:18px;color:var(--text-muted);margin-top:6px}
+
+.highlight{background:var(--bg-card2);border-left:5px solid var(--blue);border-radius:0 16px 16px 0;padding:24px 30px;margin:22px 0}
+.highlight h4{color:var(--blue-light);font-size:22px;margin-bottom:8px}
+.highlight p{font-size:20px;color:var(--text-dim);line-height:1.7}
+
+/* ── Project Detail Card ── */
+.proj-header{margin-bottom:20px}
+.proj-header .proj-label{font-size:16px;font-weight:700;letter-spacing:1px;color:var(--blue-light);margin-bottom:6px;text-transform:uppercase}
+.proj-header .proj-client{font-size:44px;font-weight:900;color:var(--white);margin-bottom:6px}
+.proj-header .proj-title{font-size:24px;color:var(--blue-light);font-weight:600}
+.proj-body{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.proj-section{background:var(--bg-card);border-radius:14px;padding:26px 28px;border:1px solid var(--border)}
+.proj-section h4{font-size:20px;font-weight:700;color:var(--accent);margin-bottom:10px}
+.proj-section p,.proj-section li{font-size:18px;color:var(--text-dim);line-height:1.8}
+.proj-section ul{list-style:none;padding:0}
+.proj-section ul li{padding-left:1.4em;text-indent:-1.4em;margin-bottom:4px}
+.proj-section ul li::before{content:'▸ ';color:var(--blue-light);font-weight:700}
+.proj-full{grid-column:1/-1}
+.proj-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+
+@media(max-width:768px){
+  .slide{padding:36px 24px}
+  h1{font-size:40px} h2{font-size:32px}
+  .info-grid,.card-grid,.proj-body{grid-template-columns:1fr}
+  .stat-row{flex-direction:column}
+  .lang-selector{right:20px;top:10px}
+}
+</style>
+</head>
+<body>
+<div class="lang-selector">
+  <button class="lang-btn active" data-lang="ko">한국어</button>
+  <button class="lang-btn" data-lang="en">EN</button>
+  <button class="lang-btn" data-lang="cn">中文</button>
+  <button class="lang-btn" data-lang="jp">日本語</button>
+</div>
+
+<div class="deck">
+  <div id="progressBar" class="progress-bar"></div>
+
+  <!-- ══ 1. COVER ══ -->
+  <div class="slide cover active">
+    <div class="slide-inner" style="text-align:center">
+      <div class="label"><span class="lang lang-ko active">Company Introduction for 장성모터스</span><span class="lang lang-en">Company Introduction for Jangseong Motors</span><span class="lang lang-cn">Jangseong Motors 公司介绍</span><span class="lang lang-jp">Jangseong Motors 会社紹介</span></div>
+      <h1 style="font-size:76px;">PopcornSAR</h1>
+      <p class="subtitle"><span class="lang lang-ko active">AUTOSAR 기반 AIDV 플랫폼 전문 기업</span><span class="lang lang-en">AUTOSAR-Based AIDV Platform Specialist</span><span class="lang lang-cn">基于 AUTOSAR 的 AIDV 平台专家</span><span class="lang lang-jp">AUTOSAR ベースの AIDV プラットフォーム専門企業</span></p>
+      <div style="width:120px;height:4px;background:var(--accent);margin:0 auto 40px;border-radius:2px"></div>
+      <p style="font-size:22px;opacity:.5"><span class="lang lang-ko active">주식회사 팝콘사</span><span class="lang lang-en">PopcornSAR Co., Ltd.</span><span class="lang lang-cn">PopcornSAR 股份公司</span><span class="lang lang-jp">PopcornSAR 株式会社</span></p>
+      <p style="font-size:18px;opacity:.35;margin-top:10px"><span class="lang lang-ko active">2026년 4월</span><span class="lang lang-en">April 2026</span><span class="lang lang-cn">2026 年 4 月</span><span class="lang lang-jp">2026年4月</span></p>
+    </div>
+  </div>
+
+  <!-- ══ 2. TABLE OF CONTENTS ══ -->
+  <div class="slide section">
+    <div class="slide-inner">
+      <h2><span class="lang lang-ko active">목차</span><span class="lang lang-en">Table of Contents</span><span class="lang lang-cn">目录</span><span class="lang lang-jp">目次</span></h2>
+      <div style="margin-top:40px;font-size:22px;color:var(--text-dim);line-height:2.2;">
+        <div><span class="lang lang-ko active">1. 기업 소개</span><span class="lang lang-en">1. Company Overview</span><span class="lang lang-cn">1. 公司概况</span><span class="lang lang-jp">1. 企業紹介</span></div>
+        <div><span class="lang lang-ko active">2. 프로젝트 레퍼런스</span><span class="lang lang-en">2. Project References</span><span class="lang lang-cn">2. 项目案例</span><span class="lang lang-jp">2. プロジェクト参考事例</span></div>
+        <div><span class="lang lang-ko active">3. 글로벌 활동</span><span class="lang lang-en">3. Global Activities</span><span class="lang lang-cn">3. 全球活动</span><span class="lang lang-jp">3. グローバル活動</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 3. CHAPTER COVER: 기업 소개 ══ -->
+  <div class="slide section">
+    <div class="slide-inner" style="text-align:center">
+      <h2 style="font-size:72px;margin-bottom:20px"><span class="lang lang-ko active">기업 소개</span><span class="lang lang-en">Company Overview</span><span class="lang lang-cn">公司概况</span><span class="lang lang-jp">企業紹介</span></h2>
+    </div>
+  </div>
+
+  <!-- ══ 4. COMPANY OVERVIEW ══ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label"><span class="lang lang-ko active">Company Overview</span><span class="lang lang-en">Company Overview</span><span class="lang lang-cn">公司概况</span><span class="lang lang-jp">企業概要</span></div>
+      <h2><span class="lang lang-ko active">기업 개요</span><span class="lang lang-en">Company Profile</span><span class="lang lang-cn">企业简介</span><span class="lang lang-jp">企業プロフィール</span></h2>
+      <div class="info-grid">
+        <div class="info-item"><span class="info-key"><span class="lang lang-ko active">기업명</span><span class="lang lang-en">Company</span><span class="lang lang-cn">公司名</span><span class="lang lang-jp">企業名</span></span><span class="info-val"><span class="lang lang-ko active">주식회사 팝콘사<br><span style="font-size:18px;color:var(--text-muted)">PopcornSAR Co., Ltd.</span></span><span class="lang lang-en">PopcornSAR Co., Ltd.</span><span class="lang lang-cn">PopcornSAR Co., Ltd.</span><span class="lang lang-jp">PopcornSAR 株式会社<br><span style="font-size:18px;color:var(--text-muted)">PopcornSAR Co., Ltd.</span></span></span></div>
+        <div class="info-item"><span class="info-key"><span class="lang lang-ko active">설립일</span><span class="lang lang-en">Founded</span><span class="lang lang-cn">成立日期</span><span class="lang lang-jp">設立日</span></span><span class="info-val"><span class="lang lang-ko active">2014년 12월 23일</span><span class="lang lang-en">Dec. 23, 2014</span><span class="lang lang-cn">2014年12月23日</span><span class="lang lang-jp">2014年12月23日</span></span></div>
+        <div class="info-item"><span class="info-key"><span class="lang lang-ko active">임직원</span><span class="lang lang-en">Staff</span><span class="lang lang-cn">员工</span><span class="lang lang-jp">従業員</span></span><span class="info-val"><span class="lang lang-ko active">23명 (개발자 20명)</span><span class="lang lang-en">23 (20 developers)</span><span class="lang lang-cn">23人(开发者20人)</span><span class="lang lang-jp">23名(開発者20名)</span></span></div>
+        <div class="info-item"><span class="info-key"><span class="lang lang-ko active">한국 본사</span><span class="lang lang-en">HQ Korea</span><span class="lang lang-cn">韩国总部</span><span class="lang lang-jp">韓国本社</span></span><span class="info-val"><span class="lang lang-ko active">서울 강남구 테헤란로78길 16, 노벨빌딩 2층</span><span class="lang lang-en">Seoul, Gangnam-gu</span><span class="lang lang-cn">首尔江南区</span><span class="lang lang-jp">ソウル江南区</span></span></div>
+      </div>
+      <div style="margin-top:18px">
+        <div style="font-size:18px;font-weight:700;color:var(--text-muted);margin-bottom:10px"><span class="lang lang-ko active">주요 고객</span><span class="lang lang-en">Key Clients</span><span class="lang lang-cn">主要客户</span><span class="lang lang-jp">主要顧客</span></div>
+        <div class="chip-grid">
+          <div class="chip"><span class="chip-dot" style="background:var(--blue)"></span><span class="lang lang-ko active">현대모비스</span><span class="lang lang-en">Hyundai Mobis</span><span class="lang lang-cn">现代摩比斯</span><span class="lang lang-jp">ヒュンダイ モービス</span></div>
+          <div class="chip"><span class="chip-dot" style="background:var(--accent)"></span>DENSO</div>
+          <div class="chip"><span class="chip-dot" style="background:var(--green)"></span><span class="lang lang-ko active">현대케피코</span><span class="lang lang-en">Hyundai Kefico</span><span class="lang lang-cn">现代开普科</span><span class="lang lang-jp">ヒュンダイ ケピコ</span></div>
+          <div class="chip"><span class="chip-dot" style="background:var(--cyan)"></span>SL<span class="lang lang-ko active">(에스엘)</span><span class="lang lang-en"></span></div>
+          <div class="chip"><span class="chip-dot" style="background:var(--purple)"></span><span class="lang lang-ko active">LG에너지솔루션</span><span class="lang lang-en">LG Energy Solution</span><span class="lang lang-cn">LG能源解决方案</span><span class="lang lang-jp">LG エネルギー ソリューション</span></div>
+          <div class="chip"><span class="chip-dot" style="background:var(--blue-light)"></span><span class="lang lang-ko active">삼성전자</span><span class="lang lang-en">Samsung Electronics</span><span class="lang lang-cn">三星电子</span><span class="lang lang-jp">サムスン電子</span></div>
+          <div class="chip"><span class="chip-dot" style="background:var(--red)"></span><span class="lang lang-ko active">LG전자</span><span class="lang lang-en">LG Electronics</span><span class="lang lang-cn">LG电子</span><span class="lang lang-jp">LG 電子</span></div>
+        </div>
+      </div>
+      <div style="margin-top:18px">
+        <div style="font-size:18px;font-weight:700;color:var(--text-muted);margin-bottom:10px"><span class="lang lang-ko active">글로벌 SDV 컨소시엄</span><span class="lang lang-en">Global SDV Consortiums</span><span class="lang lang-cn">全球 SDV 联盟</span><span class="lang lang-jp">グローバル SDV コンソーシアム</span></div>
+        <div class="chip-grid">
+          <div class="chip"><span class="chip-dot" style="background:var(--accent)"></span>OSDVI <span style="font-size:14px;color:var(--text-muted);font-weight:400"><span class="lang lang-ko active">일본</span><span class="lang lang-en">Japan</span><span class="lang lang-cn">日本</span><span class="lang lang-jp">日本</span></span></div>
+          <div class="chip"><span class="chip-dot" style="background:var(--blue)"></span>SDVerse <span style="font-size:14px;color:var(--text-muted);font-weight:400"><span class="lang lang-ko active">미국 · GM</span><span class="lang lang-en">USA · GM</span><span class="lang lang-cn">美国·通用</span><span class="lang lang-jp">米国・GM</span></span></div>
+          <div class="chip"><span class="chip-dot" style="background:var(--green)"></span>Digital.auto <span style="font-size:14px;color:var(--text-muted);font-weight:400">Bosch</span></div>
+          <div class="chip"><span class="chip-dot" style="background:var(--purple)"></span><span class="lang lang-ko active">현대모비스 SDV 컨소시엄</span><span class="lang lang-en">Hyundai Mobis SDV Consortium</span><span class="lang lang-cn">现代摩比斯 SDV 联盟</span><span class="lang lang-jp">ヒュンダイ モービス SDV コンソーシアム</span> <span style="font-size:14px;color:var(--text-muted);font-weight:400"><span class="lang lang-ko active">한국</span><span class="lang lang-en">Korea</span><span class="lang lang-cn">韩国</span><span class="lang lang-jp">韓国</span></span></div>
+          <div class="chip"><span class="chip-dot" style="background:var(--red)"></span>K-SDV <span style="font-size:14px;color:var(--text-muted);font-weight:400"><span class="lang lang-ko active">한국</span><span class="lang lang-en">Korea</span><span class="lang lang-cn">韩国</span><span class="lang lang-jp">韓国</span></span></div>
+        </div>
+      </div>
+      <div class="highlight" style="margin-top:20px">
+        <h4><span class="lang lang-ko active">핵심 역량</span><span class="lang lang-en">Core Competencies</span><span class="lang lang-cn">核心竞争力</span><span class="lang lang-jp">コア コンピタンス</span></h4>
+        <p><span class="lang lang-ko active">팝콘사는 <strong>Adaptive AUTOSAR</strong> 분야의 완전한 Tool-chain(모델링 도구 + 미들웨어 스택 + 개발 환경 + 가상 ECU)과 <strong>Classic AUTOSAR</strong> 모델링 도구를 보유한 AUTOSAR 전문 기업으로, <strong>AI 기반 Software-Defined Vehicle(AIDV) 기술을 선도</strong>하고 있습니다.</span><span class="lang lang-en">PopcornSAR is a leading AUTOSAR specialist with complete Tool-chain for <strong>Adaptive AUTOSAR</strong> (modeling tools, middleware stack, development environment, virtual ECU) and <strong>Classic AUTOSAR</strong> modeling tools, pioneering <strong>AI-based Software-Defined Vehicle (AIDV) technology</strong>.</span><span class="lang lang-cn">PopcornSAR 是一家 AUTOSAR 专业公司，拥有完整的 <strong>Adaptive AUTOSAR</strong> 工具链（建模工具、中间件堆栈、开发环境、虚拟 ECU）和 <strong>Classic AUTOSAR</strong> 建模工具，引领 <strong>基于人工智能的软件定义车辆 (AIDV) 技术</strong>。</span><span class="lang lang-jp">PopcornSAR は、<strong>Adaptive AUTOSAR</strong> 分野の完全なツール チェーン（モデリング ツール、ミドルウェア スタック、開発環境、仮想 ECU）と <strong>Classic AUTOSAR</strong> モデリング ツールを備えた AUTOSAR 専門企業で、<strong>AI ベースのソフトウェア定義車両 (AIDV) 技術をリード</strong>しています。</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 5. CHAPTER COVER: 프로젝트 레퍼런스 ══ -->
+  <div class="slide section">
+    <div class="slide-inner" style="text-align:center">
+      <h2 style="font-size:72px;margin-bottom:20px"><span class="lang lang-ko active">프로젝트 레퍼런스</span><span class="lang lang-en">Project References</span><span class="lang lang-cn">项目案例</span><span class="lang lang-jp">プロジェクト参考事例</span></h2>
+    </div>
+  </div>
+
+  <!-- ══ 6. LG이노텍 ══ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="proj-header">
+        <div class="proj-label"><span class="lang lang-ko active">Project — LG Innotek</span><span class="lang lang-en">Project — LG Innotek</span><span class="lang lang-cn">项目 — LG 伊诺特克</span><span class="lang lang-jp">プロジェクト — LG イノテック</span></div>
+        <div class="proj-client"><span class="lang lang-ko active">LG이노텍</span><span class="lang lang-en">LG Innotek</span><span class="lang lang-cn">LG 伊诺特克</span><span class="lang lang-jp">LG イノテック</span></div>
+        <div class="proj-title"><span class="lang lang-ko active">VCC(Volvo Car Corporation) 양산 프로젝트 — AUTOSAR 4.0.3 국내 최초 양산 성공</span><span class="lang lang-en">VCC (Volvo Car Corporation) Mass Production Project — First Domestic Mass Production Success of AUTOSAR 4.0.3</span><span class="lang lang-cn">VCC(沃尔沃汽车公司)量产项目 — AUTOSAR 4.0.3 国内首次量产成功</span><span class="lang lang-jp">VCC(ボルボ・カー・コーポレーション)量産プロジェクト — AUTOSAR 4.0.3 国内初の量産成功</span></div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">프로젝트 개요</span><span class="lang lang-en">Project Overview</span><span class="lang lang-cn">项目概况</span><span class="lang lang-jp">プロジェクト概要</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">LG이노텍, KSS-ImageNEXT(현 비욘드아이)와 협력하여 Around View의 MCU AUTOSAR SWC/BSW 설정 및 개발</span><span class="lang lang-en">Collaborated with LG Innotek and KSS-ImageNEXT to develop MCU AUTOSAR SWC/BSW for Around View</span><span class="lang lang-cn">与 LG 伊诺特克和 KSS-ImageNEXT 合作开发环景的 MCU AUTOSAR SWC/BSW</span><span class="lang lang-jp">LG イノテックおよび KSS-ImageNEXT と協力して Around View の MCU AUTOSAR SWC/BSW を開発</span></li>
+            <li><span class="lang lang-ko active">SOP (Start of Production) 성공</span><span class="lang lang-en">Successful SOP (Start of Production)</span><span class="lang lang-cn">成功实现 SOP(量产开始)</span><span class="lang lang-jp">SOP(量産開始)成功</span></li>
+            <li><span class="lang lang-ko active">KPIT BSW 문제점 개선에 따른 양산 적용 및 도입 성공</span><span class="lang lang-en">Successful mass production application through KPIT BSW improvements</span><span class="lang lang-cn">通过 KPIT BSW 改进成功实现量产应用</span><span class="lang lang-jp">KPIT BSW 改善による量産適用と導入成功</span></li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">프로젝트의 의미</span><span class="lang lang-en">Project Significance</span><span class="lang lang-cn">项目意义</span><span class="lang lang-jp">プロジェクトの意義</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">AUTOSAR 4.0.3 국내 최초 양산 성공 사례 (Classic Platform)</span><span class="lang lang-en">First domestic mass production success case for AUTOSAR 4.0.3 (Classic Platform)</span><span class="lang lang-cn">AUTOSAR 4.0.3 国内首次量产成功案例(经典平台)</span><span class="lang lang-jp">AUTOSAR 4.0.3 国内初の量産成功事例(クラシック プラットフォーム)</span></li>
+            <li><span class="lang lang-ko active">글로벌 OEM(Volvo) 양산 품질 검증 통과</span><span class="lang lang-en">Passed global OEM (Volvo) mass production quality verification</span><span class="lang lang-cn">通过全球 OEM(沃尔沃)量产质量验证</span><span class="lang lang-jp">グローバル OEM(ボルボ)量産品質検証合格</span></li>
+            <li><span class="lang lang-ko active">AUTOSAR BSW 문제 해결 능력 입증</span><span class="lang lang-en">Demonstrated AUTOSAR BSW problem-solving capability</span><span class="lang lang-cn">展示 AUTOSAR BSW 问题解决能力</span><span class="lang lang-jp">AUTOSAR BSW 問題解決能力を実証</span></li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <span class="tag tag-blue"><span class="lang lang-ko active">Classic AUTOSAR</span><span class="lang lang-en">Classic AUTOSAR</span><span class="lang lang-cn">经典 AUTOSAR</span><span class="lang lang-jp">クラシック AUTOSAR</span></span>
+        <span class="tag tag-green"><span class="lang lang-ko active">양산 프로젝트</span><span class="lang lang-en">Mass Production Project</span><span class="lang lang-cn">量产项目</span><span class="lang lang-jp">量産プロジェクト</span></span>
+        <span class="tag tag-accent">Volvo</span>
+        <span class="tag tag-purple"><span class="lang lang-ko active">2015</span><span class="lang lang-en">2015</span><span class="lang lang-cn">2015</span><span class="lang lang-jp">2015</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 7. LG전자 ══ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="proj-header">
+        <div class="proj-label"><span class="lang lang-ko active">Project — LG Electronics</span><span class="lang lang-en">Project — LG Electronics</span><span class="lang lang-cn">项目 — LG 电子</span><span class="lang lang-jp">プロジェクト — LG 電子</span></div>
+        <div class="proj-client"><span class="lang lang-ko active">LG전자</span><span class="lang lang-en">LG Electronics</span><span class="lang lang-cn">LG 电子</span><span class="lang lang-jp">LG 電子</span></div>
+        <div class="proj-title"><span class="lang lang-ko active">AUTOSAR 전문기업 인정 — VW 양산 프로젝트 수행 및 408명 교육</span><span class="lang lang-en">AUTOSAR Expertise Recognized — VW Mass Production Project & 408 Engineers Training</span><span class="lang lang-cn">AUTOSAR 专业企业认可 — VW 量产项目及 408 名工程师培训</span><span class="lang lang-jp">AUTOSAR 専門企業認定 — VW 量産プロジェクト及び 408 名エンジニア教育</span></div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">VW(폭스바겐) 양산 프로젝트</span><span class="lang lang-en">VW (Volkswagen) Mass Production Project</span><span class="lang lang-cn">大众汽车(Volkswagen)量产项目</span><span class="lang lang-jp">VW(フォルクスワーゲン)量産プロジェクト</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">LG전자 VC사업부와 협력하여 폭스바겐 Transceiver Module의 MCU AUTOSAR 개발</span><span class="lang lang-en">Collaborated with LG Electronics VC division to develop MCU AUTOSAR for Volkswagen Transceiver Module</span><span class="lang lang-cn">与 LG 电子 VC 部门合作开发大众汽车收发器模块的 MCU AUTOSAR</span><span class="lang lang-jp">LG電子 VC事業部と協力してフォルクスワーゲン トランシーバー モジュールの MCU AUTOSAR を開発</span></li>
+            <li><span class="lang lang-ko active">4,000페이지 이상의 독일어 요구사양서 분석 후 개발 완료</span><span class="lang lang-en">Completed development after analyzing 4,000+ pages of German requirement specifications</span><span class="lang lang-cn">分析 4,000 多页德文要求规范后完成开发</span><span class="lang lang-jp">4,000 ページ以上のドイツ語要件仕様書を分析して開発を完了</span></li>
+            <li><span class="lang lang-ko active">경쟁사 Vector 도구 환경에서도 팝콘사 자체 개발 도구(AutoSAR.io)만으로 설계·개발 수행</span><span class="lang lang-en">Successfully performed design and development using only PopcornSAR's proprietary tool (AutoSAR.io) in Vector tool environment</span><span class="lang lang-cn">仅使用 PopcornSAR 自主开发工具(AutoSAR.io)在 Vector 工具环境中完成设计和开发</span><span class="lang lang-jp">競合他社の Vector ツール環境でも PopcornSAR 独自開発ツール(AutoSAR.io)のみで設計・開発実施</span></li>
+            <li><span class="lang lang-ko active">자체 도구의 타사 호환성 검증 — 이후 프로젝트 수주의 핵심 레퍼런스</span><span class="lang lang-en">Validated proprietary tool's third-party compatibility — key reference for subsequent project wins</span><span class="lang lang-cn">验证自主工具的第三方兼容性 — 后续项目赢取的关键参考</span><span class="lang lang-jp">自社ツールの第三者互換性を検証 — 後続プロジェクト受注の重要な参考事例</span></li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">Classic AUTOSAR 교육 (408명)</span><span class="lang lang-en">Classic AUTOSAR Training (408 Engineers)</span><span class="lang lang-cn">Classic AUTOSAR 培训 (408 名工程师)</span><span class="lang lang-jp">Classic AUTOSAR 教育 (408 名エンジニア)</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">LG전자 전장부품(VC) 사업본부 대상 Classic AUTOSAR 전담 교육</span><span class="lang lang-en">Dedicated Classic AUTOSAR training for LG Electronics Vehicle Component (VC) division</span><span class="lang lang-cn">为 LG 电子车辆部件 (VC) 部门提供 Classic AUTOSAR 专项培训</span><span class="lang lang-jp">LG 電子車両部品 (VC) 事業本部向け Classic AUTOSAR 専任教育</span></li>
+            <li><span class="lang lang-ko active">중장기 초/중/고급 과정 (총 72시간 커리큘럼)</span><span class="lang lang-en">Medium-to-long-term beginner/intermediate/advanced courses (72-hour curriculum total)</span><span class="lang lang-cn">中长期初级/中级/高级课程(总共 72 小时课程)</span><span class="lang lang-jp">中長期初級/中級/上級コース(合計 72 時間カリキュラム)</span></li>
+            <li><span class="lang lang-ko active">Classic AUTOSAR BSW, RTE, SW-C 구현 등</span><span class="lang lang-en">Covers Classic AUTOSAR BSW, RTE, SW-C implementation, etc.</span><span class="lang lang-cn">涵盖 Classic AUTOSAR BSW、RTE、SW-C 实现等</span><span class="lang lang-jp">Classic AUTOSAR BSW、RTE、SW-C 実装など</span></li>
+            <li><span class="lang lang-ko active">총 408명의 Classic AUTOSAR 전문가 배출</span><span class="lang lang-en">Trained 408 Classic AUTOSAR specialists</span><span class="lang lang-cn">培训了 408 名 Classic AUTOSAR 专家</span><span class="lang lang-jp">408 名の Classic AUTOSAR スペシャリストを育成</span></li>
+          </ul>
+        </div>
+        <div class="proj-section proj-full">
+          <h4><span class="lang lang-ko active">프로젝트의 의미</span><span class="lang lang-en">Project Significance</span><span class="lang lang-cn">项目意义</span><span class="lang lang-jp">プロジェクトの意義</span></h4>
+          <p><span class="lang lang-ko active">LG전자로부터 자체 개발 도구를 보유한 국내 유일의 AUTOSAR 전문 기업으로 인정받았으며, 담당자 3명이 팝콘사 사무실에 장기 파견 상주하여 공동 개발을 진행한 희귀 사례. 이 경험이 이후 DENSO, 현대모비스 등 주요 프로젝트 수주의 초석이 됨.</span><span class="lang lang-en">Recognized by LG Electronics as Korea's only AUTOSAR specialist with proprietary development tools. 3 key engineers were permanently stationed at PopcornSAR offices for joint development—a rare case. This experience became the foundation for winning major subsequent projects including DENSO and Hyundai Mobis.</span><span class="lang lang-cn">获得 LG 电子认可，成为韩国唯一拥有自主开发工具的 AUTOSAR 专家企业。3 名关键工程师长期驻扎在 PopcornSAR 办公室进行联合开发 — 一个罕见的案例。这一经验成为随后赢得包括电装和现代摩比斯在内的重大项目的基础。</span><span class="lang lang-jp">LG 電子から、自社開発ツールを保有する韓国唯一の AUTOSAR 専門企業として認識されました。担当者 3 名が PopcornSAR のオフィスに長期駐在して共同開発を実施 — 希少な事例。この経験は、その後のデンソーや現代摩比斯など主要プロジェクト受注の基礎となりました。</span></p>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <span class="tag tag-blue"><span class="lang lang-ko active">Classic AUTOSAR</span><span class="lang lang-en">Classic AUTOSAR</span><span class="lang lang-cn">经典 AUTOSAR</span><span class="lang lang-jp">クラシック AUTOSAR</span></span>
+        <span class="tag tag-green"><span class="lang lang-ko active">양산 프로젝트</span><span class="lang lang-en">Mass Production Project</span><span class="lang lang-cn">量产项目</span><span class="lang lang-jp">量産プロジェクト</span></span>
+        <span class="tag tag-accent"><span class="lang lang-ko active">교육 408명</span><span class="lang lang-en">Training 408 Engineers</span><span class="lang lang-cn">培训 408 名工程师</span><span class="lang lang-jp">教育 408 名</span></span>
+        <span class="tag tag-purple"><span class="lang lang-ko active">2016~2017</span><span class="lang lang-en">2016~2017</span><span class="lang lang-cn">2016~2017</span><span class="lang lang-jp">2016~2017</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 8. DENSO ══ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="proj-header">
+        <div class="proj-label"><span class="lang lang-ko active">Project — DENSO</span><span class="lang lang-en">Project — DENSO</span><span class="lang lang-cn">项目 — 电装</span><span class="lang lang-jp">プロジェクト — デンソー</span></div>
+        <div class="proj-client">DENSO</div>
+        <div class="proj-title"><span class="lang lang-ko active">세계 최초 Adaptive AUTOSAR 개발 도구 납품 — Vector, dSPACE 경쟁에서 1위</span><span class="lang lang-en">World's First Adaptive AUTOSAR Development Tool Delivered — Ranked 1st Over Vector & dSPACE</span><span class="lang lang-cn">全球首个 Adaptive AUTOSAR 开发工具交付 — 在 Vector·dSPACE 竞争中排名第一</span><span class="lang lang-jp">世界初 Adaptive AUTOSAR 開発ツール納品 — Vector・dSPACE 競争で 1 位</span></div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">선정 배경</span><span class="lang lang-en">Selection Background</span><span class="lang lang-cn">选定背景</span><span class="lang lang-jp">選定背景</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">2017.10 Adaptive AUTOSAR 표준사양서 최초 공개 (R17-10)</span><span class="lang lang-en">2017.10 First official release of Adaptive AUTOSAR specification (R17-10)</span><span class="lang lang-cn">2017.10 Adaptive AUTOSAR 标准规范首次发布 (R17-10)</span><span class="lang lang-jp">2017.10 Adaptive AUTOSAR 標準仕様書初版公開 (R17-10)</span></li>
+            <li><span class="lang lang-ko active">팝콘사, 2017.12 세계 최초 Adaptive AUTOSAR 개발 도구 개발</span><span class="lang lang-en">PopcornSAR developed world's first Adaptive AUTOSAR development tool in 2017.12</span><span class="lang lang-cn">PopcornSAR 于 2017.12 开发全球首个 Adaptive AUTOSAR 开发工具</span><span class="lang lang-jp">PopcornSAR が 2017.12 に世界初 Adaptive AUTOSAR 開発ツール開発</span></li>
+            <li><span class="lang lang-ko active">2018.01 일본 Automotive World 전시회에서 시연 → DENSO 미팅 의뢰</span><span class="lang lang-en">2018.01 Demonstrated at Japan Automotive World → DENSO requested meeting</span><span class="lang lang-cn">2018.01 在日本汽车世界展览会上展示 → 电装请求会议</span><span class="lang lang-jp">2018.01 日本 Automotive World 展示会で実演 → DENSO ミーティング依頼</span></li>
+            <li><span class="lang lang-ko active">미팅 2개월 만인 2018.03 DENSO에 납품 완료</span><span class="lang lang-en">Delivered to DENSO just 2 months after initial meeting in 2018.03</span><span class="lang lang-cn">仅在初次会议后 2 个月(2018.03)即完成交付电装</span><span class="lang lang-jp">ミーティング 2 ヶ月後の 2018.03 に DENSO へ納品完了</span></li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">검증 결과 — 글로벌 경쟁 1위</span><span class="lang lang-en">Verification Results — Global Competition 1st Place</span><span class="lang lang-cn">验证结果 — 全球竞争第一名</span><span class="lang lang-jp">検証結果 — グローバル競争 1 位</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">DENSO가 PopcornSAR, Vector, dSPACE 3개사 도구 구매 후 9개월간 내부 검증</span><span class="lang lang-en">DENSO evaluated PopcornSAR, Vector, dSPACE tools for 9 months after purchase</span><span class="lang lang-cn">电装购买 PopcornSAR、Vector、dSPACE 三家工具后进行 9 个月内部验证</span><span class="lang lang-jp">DENSO が PopcornSAR、Vector、dSPACE の 3 社ツール購入後 9 ヶ月間内部検証</span></li>
+            <li><span class="lang lang-ko active">일본 특유의 체계적이고 까다로운 기술 평가 진행</span><span class="lang lang-en">Conducted Japan's characteristically systematic and rigorous technical evaluation</span><span class="lang lang-cn">进行日本特有的系统严格的技术评估</span><span class="lang lang-jp">日本特有の体系的で厳密な技術評価を実施</span></li>
+            <li><span class="lang lang-ko active">결과: 팝콘사가 유일하게 검증 통과</span><span class="lang lang-en">Result: Only PopcornSAR passed verification</span><span class="lang lang-cn">结果:仅 PopcornSAR 通过验证</span><span class="lang lang-jp">結果:PopcornSAR のみが検証に合格</span></li>
+            <li><span class="lang lang-ko active">DENSO 자회사 AUBASS와 유일한 비즈니스 파트너 계약 체결</span><span class="lang lang-en">Signed sole business partnership agreement with DENSO subsidiary AUBASS</span><span class="lang lang-cn">与 DENSO 子公司 AUBASS 签署唯一的商业伙伴关系协议</span><span class="lang lang-jp">DENSO 子会社 AUBASS と唯一のビジネス パートナーシップ契約を締結</span></li>
+          </ul>
+        </div>
+        <div class="proj-section proj-full">
+          <h4><span class="lang lang-ko active">프로젝트의 의미</span><span class="lang lang-en">Project Significance</span><span class="lang lang-cn">项目意义</span><span class="lang lang-jp">プロジェクトの意義</span></h4>
+          <p><span class="lang lang-ko active">글로벌 전장부품 2위 기업 DENSO의 글로벌 경쟁 평가에서 Vector, dSPACE를 제치고 1위를 차지한 것은 팝콘사의 Adaptive AUTOSAR 기술력이 세계 최고 수준임을 입증한 사례입니다. 이후 AUBASS 화이트라벨 공급, Huawei·AVL 수출로 이어졌습니다.</span><span class="lang lang-en">Ranking 1st in DENSO's global competitive evaluation—outperforming Vector and dSPACE—demonstrates that PopcornSAR's Adaptive AUTOSAR technology is world-class. This led to subsequent AUBASS white-label supply and exports to Huawei and AVL.</span><span class="lang lang-cn">在全球第二大汽车零部件企业电装的全球竞争评估中排名第一,击败 Vector 和 dSPACE,证明 PopcornSAR 的 Adaptive AUTOSAR 技术达到世界级水平。这随后导致 AUBASS 白标供应和对华为·AVL 的出口。</span><span class="lang lang-jp">世界第 2 位の自動車部品企業 DENSO のグローバル競争評価で 1 位を獲得し、Vector と dSPACE を上回ることは、PopcornSAR の Adaptive AUTOSAR 技術が世界レベルであることを実証しています。その後 AUBASS ホワイト ラベル供給、華為・AVL への輸出につながりました。</span></p>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <span class="tag tag-blue"><span class="lang lang-ko active">Adaptive AUTOSAR</span><span class="lang lang-en">Adaptive AUTOSAR</span><span class="lang lang-cn">自适应 AUTOSAR</span><span class="lang lang-jp">アダプティブ AUTOSAR</span></span>
+        <span class="tag tag-green"><span class="lang lang-ko active">세계 최초</span><span class="lang lang-en">World's First</span><span class="lang lang-cn">世界首创</span><span class="lang lang-jp">世界初</span></span>
+        <span class="tag tag-accent"><span class="lang lang-ko active">Vector·dSPACE 경쟁 1위</span><span class="lang lang-en">1st Over Vector·dSPACE</span><span class="lang lang-cn">超越 Vector·dSPACE 第一名</span><span class="lang lang-jp">Vector·dSPACE 競争 1 位</span></span>
+        <span class="tag tag-purple"><span class="lang lang-ko active">2018</span><span class="lang lang-en">2018</span><span class="lang lang-cn">2018</span><span class="lang lang-jp">2018</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 9. 현대케피코 ══ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="proj-header">
+        <div class="proj-label"><span class="lang lang-ko active">Project — Hyundai Kefico</span><span class="lang lang-en">Project — Hyundai Kefico</span><span class="lang lang-cn">项目 — 现代开普科</span><span class="lang lang-jp">プロジェクト — ヒュンダイ ケピコ</span></div>
+        <div class="proj-client"><span class="lang lang-ko active">현대케피코</span><span class="lang lang-en">Hyundai Kefico</span><span class="lang lang-cn">现代开普科</span><span class="lang lang-jp">ヒュンダイ ケピコ</span></div>
+        <div class="proj-title"><span class="lang lang-ko active">세계 최초 AI 적용 파워트레인 — 현대 그룹사 첫 계약 체결</span><span class="lang lang-en">World's First AI-Applied Powertrain — First Hyundai Group Contract Signed</span><span class="lang lang-cn">全球首个 AI 应用动力总成 — 现代集团首份合约签订</span><span class="lang lang-jp">世界初 AI 適用パワートレイン — 現代グループ初契約締結</span></div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">선정 배경</span><span class="lang lang-en">Selection Background</span><span class="lang lang-cn">选定背景</span><span class="lang lang-jp">選定背景</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">현대케피코가 자사 제어기에 최초로 Adaptive AUTOSAR + On-device AI 적용 과제 기획</span><span class="lang lang-en">Hyundai Kefico planned to apply Adaptive AUTOSAR + On-device AI to its controllers for the first time</span><span class="lang lang-cn">现代开普科计划首次将 Adaptive AUTOSAR + 设备端 AI 应用于其控制器</span><span class="lang lang-jp">ヒュンダイ ケピコが初めて Adaptive AUTOSAR + オンデバイス AI をコントローラーに適用する計画</span></li>
+            <li><span class="lang lang-ko active">약 3개월간 국내외 업체 미팅 결과, 유일하게 기술적 방향성을 제시한 팝콘사 선택</span><span class="lang lang-en">After 3 months of meetings with domestic and overseas companies, selected PopcornSAR as the only one proposing technical direction</span><span class="lang lang-cn">经过 3 个月与国内外公司的会议,选择了作为唯一提出技术方向的 PopcornSAR</span><span class="lang lang-jp">国内外企業との 3 ヶ月間の会議の結果、技術的方向性を提唱した唯一の企業 PopcornSAR を選択</span></li>
+            <li><span class="lang lang-ko active">현대오토에버(그룹사 SW기업)의 자체 도구와 비교 평가에서 우위 확보</span><span class="lang lang-en">Secured advantage in comparative evaluation against Hyundai AutoEver's proprietary tools</span><span class="lang lang-cn">在与现代AutoEver自主工具的对比评估中获得优势</span><span class="lang lang-jp">現代 AutoEver 自社ツールとの比較評価で優位性を確保</span></li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">수행 내용</span><span class="lang lang-en">Project Deliverables</span><span class="lang lang-cn">执行内容</span><span class="lang lang-jp">実施内容</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">NXP S32G2 기반 Adaptive Platform + Python AI 적용 차세대 파워트레인 개발</span><span class="lang lang-en">Developed next-generation powertrain based on NXP S32G2 with Adaptive Platform + Python AI</span><span class="lang lang-cn">基于 NXP S32G2 的 Adaptive Platform + Python AI 开发下一代动力总成</span><span class="lang lang-jp">NXP S32G2 ベース Adaptive Platform + Python AI を適用した次世代パワートレイン開発</span></li>
+            <li><span class="lang lang-ko active">Container 기술 도입 최초 사례</span><span class="lang lang-en">First implementation of Container technology</span><span class="lang lang-cn">Container 技术首次实施</span><span class="lang lang-jp">Container 技術導入初事例</span></li>
+            <li><span class="lang lang-ko active">POC 시연: 현대오토에버, 팝콘사, Vector 3사 중 팝콘사만 요구 성능 발휘</span><span class="lang lang-en">POC demonstration: Among Hyundai AutoEver, PopcornSAR, and Vector—only PopcornSAR demonstrated required performance</span><span class="lang lang-cn">POC 演示:在现代 AutoEver、PopcornSAR 和 Vector 三家中,仅 PopcornSAR 展示了所需性能</span><span class="lang lang-jp">POC 実演:現代 AutoEver、PopcornSAR、Vector の 3 社の中で、PopcornSAR のみが必要なパフォーマンスを実証</span></li>
+            <li><span class="lang lang-ko active">Adaptive AUTOSAR + AI 통합 기술 검증 성공</span><span class="lang lang-en">Successfully verified integrated Adaptive AUTOSAR + AI technology</span><span class="lang lang-cn">成功验证了集成 Adaptive AUTOSAR + AI 技术</span><span class="lang lang-jp">Adaptive AUTOSAR + AI 統合技術の検証成功</span></li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <span class="tag tag-blue"><span class="lang lang-ko active">Adaptive AUTOSAR</span><span class="lang lang-en">Adaptive AUTOSAR</span><span class="lang lang-cn">自适应 AUTOSAR</span><span class="lang lang-jp">アダプティブ AUTOSAR</span></span>
+        <span class="tag tag-green"><span class="lang lang-ko active">AI + 파워트레인</span><span class="lang lang-en">AI + Powertrain</span><span class="lang lang-cn">AI + 动力总成</span><span class="lang lang-jp">AI + パワートレイン</span></span>
+        <span class="tag tag-accent"><span class="lang lang-ko active">현대 그룹사</span><span class="lang lang-en">Hyundai Group</span><span class="lang lang-cn">现代集团</span><span class="lang lang-jp">現代グループ</span></span>
+        <span class="tag tag-purple"><span class="lang lang-ko active">2021</span><span class="lang lang-en">2021</span><span class="lang lang-cn">2021</span><span class="lang lang-jp">2021</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 10. 현대모비스 ══ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="proj-header">
+        <div class="proj-label"><span class="lang lang-ko active">Project — Hyundai Mobis</span><span class="lang lang-en">Project — Hyundai Mobis</span><span class="lang lang-cn">项目 — 现代摩比斯</span><span class="lang lang-jp">プロジェクト — ヒュンダイ モービス</span></div>
+        <div class="proj-client"><span class="lang lang-ko active">현대모비스</span><span class="lang lang-en">Hyundai Mobis</span><span class="lang lang-cn">现代摩比斯</span><span class="lang lang-jp">ヒュンダイ モービス</span></div>
+        <div class="proj-title"><span class="lang lang-ko active">SDV 컨소시엄 개발 프로젝트 리더 — 2026년 양산 플랫폼</span><span class="lang lang-en">SDV Consortium Development Project Leader — 2026 Mass Production Platform</span><span class="lang lang-cn">SDV 联盟开发项目负责人 — 2026 年量产平台</span><span class="lang lang-jp">SDV コンソーシアム開発プロジェクト リーダー — 2026 年量産プラットフォーム</span></div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">ADAS 통합제어기 → SDV 플랫폼</span><span class="lang lang-en">ADAS Integrated Controller → SDV Platform</span><span class="lang lang-cn">ADAS 集成控制器 → SDV 平台</span><span class="lang lang-jp">ADAS 統合コントローラー → SDV プラットフォーム</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">2022년 ADAS 통합제어기 PoC로 시작, 현재 SDV 플랫폼으로 진화</span><span class="lang lang-en">Started with 2022 ADAS integrated controller PoC, evolved to SDV platform</span><span class="lang lang-cn">从 2022 年 ADAS 集成控制器 PoC 开始,演变为 SDV 平台</span><span class="lang lang-jp">2022 年 ADAS 統合コントローラー PoC から開始、SDV プラットフォームに進化</span></li>
+            <li><span class="lang lang-ko active">해외 OEM(Karma) 대상 통합 ECU 선행 프로젝트로 확대</span><span class="lang lang-en">Expanded to advanced integrated ECU project for overseas OEM (Karma)</span><span class="lang lang-cn">扩展为针对海外 OEM(Karma)的集成 ECU 先行项目</span><span class="lang lang-jp">海外 OEM(Karma)向け統合 ECU 先行プロジェクトに拡大</span></li>
+            <li><span class="lang lang-ko active">2024.09 현대모비스 본사 테크쇼에서 현대자동차 경영진, 모비스 사장/부사장에게 시연</span><span class="lang lang-en">2024.09 Demonstrated at Hyundai Mobis HQ tech show for Hyundai Motor executives and Mobis president/VP</span><span class="lang lang-cn">2024.09 在现代摩比斯总部技术展示会上为现代汽车高管及摩比斯总裁/副总裁演示</span><span class="lang lang-jp">2024.09 現代モービス本社テックショーで現代自動車幹部、モービス社長/副社長に実演</span></li>
+            <li><span class="lang lang-ko active">1년간 주 1회 이상 실무 협의 및 현장 지원</span><span class="lang lang-en">1 year of weekly or more frequent operational meetings and on-site support</span><span class="lang lang-cn">1 年来每周或以上频率的工作会议和现场支持</span><span class="lang lang-jp">1 年間週 1 回以上の実務協議及びオンサイト サポート</span></li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">SDV 컨소시엄 (2024.07 출범)</span><span class="lang lang-en">SDV Consortium (Launched 2024.07)</span><span class="lang lang-cn">SDV 联盟 (2024.07 启动)</span><span class="lang lang-jp">SDV コンソーシアム (2024.07 発足)</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">현대모비스 주관 14개사 → 현재 확장 중</span><span class="lang lang-en">14 member companies led by Hyundai Mobis → currently expanding</span><span class="lang lang-cn">由现代摩比斯主导的 14 家公司 → 目前正在扩展</span><span class="lang lang-jp">現代モービス主導 14 社 → 現在拡張中</span></li>
+            <li><span class="lang lang-ko active">팝콘사: Development Project Leader 선정</span><span class="lang lang-en">PopcornSAR: Designated as Development Project Leader</span><span class="lang lang-cn">PopcornSAR:被指定为开发项目负责人</span><span class="lang lang-jp">PopcornSAR:開発プロジェクト リーダーに指定</span></li>
+            <li><span class="lang lang-ko active">유일한 Adaptive AUTOSAR 플랫폼 기업으로 참여</span><span class="lang lang-en">Participates as the only Adaptive AUTOSAR platform company</span><span class="lang lang-cn">作为唯一的 Adaptive AUTOSAR 平台公司参与</span><span class="lang lang-jp">唯一の Adaptive AUTOSAR プラットフォーム企業として参加</span></li>
+            <li><span class="lang lang-ko active">Zonal Architecture, SDV API, Cloud Native IDE 담당</span><span class="lang lang-en">Responsible for Zonal Architecture, SDV API, Cloud Native IDE</span><span class="lang lang-cn">负责 Zonal Architecture、SDV API、Cloud Native IDE</span><span class="lang lang-jp">Zonal Architecture、SDV API、Cloud Native IDE を担当</span></li>
+            <li><span class="lang lang-ko active">KGM 플랫폼 개발 참여 (2028년 양산 목표)</span><span class="lang lang-en">Participates in KGM platform development (2028 mass production target)</span><span class="lang lang-cn">参与 KGM 平台开发(2028 年量产目标)</span><span class="lang lang-jp">KGM プラットフォーム開発に参加 (2028 年量産目標)</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="highlight" style="margin-top:10px">
+        <p><span class="lang lang-ko active">현대모비스 CEO Investor Day 2025에서 전장 부문 공식 개발 협력사로 언급되었으며, 주간 단위 WG 회의를 통해 실시간 요구사항 대응 중.</span><span class="lang lang-en">Mentioned as official development partner in vehicle electronics division at Hyundai Mobis CEO Investor Day 2025, currently responding to real-time requirements through weekly WG meetings.</span><span class="lang lang-cn">在现代摩比斯 CEO 投资者日 2025 中被提及为车辆电子部门的官方开发伙伴,目前通过每周工作小组会议应对实时需求。</span><span class="lang lang-jp">現代モービス CEO Investor Day 2025 で車両電子部門の公式開発協力企業として言及され、週次 WG 会議を通じてリアルタイムの要件対応中。</span></p>
+      </div>
+      <div style="margin-top:16px">
+        <span class="tag tag-blue"><span class="lang lang-ko active">Adaptive AUTOSAR</span><span class="lang lang-en">Adaptive AUTOSAR</span><span class="lang lang-cn">自适应 AUTOSAR</span><span class="lang lang-jp">アダプティブ AUTOSAR</span></span>
+        <span class="tag tag-green"><span class="lang lang-ko active">SDV 컨소시엄</span><span class="lang lang-en">SDV Consortium</span><span class="lang lang-cn">SDV 联盟</span><span class="lang lang-jp">SDV コンソーシアム</span></span>
+        <span class="tag tag-accent"><span class="lang lang-ko active">Development Leader</span><span class="lang lang-en">Development Leader</span><span class="lang lang-cn">开发负责人</span><span class="lang lang-jp">開発リーダー</span></span>
+        <span class="tag tag-purple"><span class="lang lang-ko active">2022~현재</span><span class="lang lang-en">2022~Present</span><span class="lang lang-cn">2022~现在</span><span class="lang lang-jp">2022~現在</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 11. LG에너지솔루션 ══ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="proj-header">
+        <div class="proj-label"><span class="lang lang-ko active">Project — LG Energy Solution</span><span class="lang lang-en">Project — LG Energy Solution</span><span class="lang lang-cn">项目 — LG 能源解决方案</span><span class="lang lang-jp">プロジェクト — LG エネルギー ソリューション</span></div>
+        <div class="proj-client"><span class="lang lang-ko active">LG에너지솔루션</span><span class="lang lang-en">LG Energy Solution</span><span class="lang lang-cn">LG 能源解决方案</span><span class="lang lang-jp">LG エネルギー ソリューション</span></div>
+        <div class="proj-title"><span class="lang lang-ko active">BMS Adaptive AUTOSAR Migration PoC — 도요타·혼다 프로모션 지원</span><span class="lang lang-en">BMS Adaptive AUTOSAR Migration PoC — Toyota & Honda Promotion Support</span><span class="lang lang-cn">BMS Adaptive AUTOSAR 迁移 PoC — 丰田·本田推广支持</span><span class="lang lang-jp">BMS Adaptive AUTOSAR Migration PoC — トヨタ・ホンダプロモーション支援</span></div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">프로젝트 단계</span><span class="lang lang-en">Project Phases</span><span class="lang lang-cn">项目阶段</span><span class="lang lang-jp">プロジェクト段階</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">1차 PoC (24.10~12): NXP S32G2에 Adaptive AUTOSAR 구현</span><span class="lang lang-en">Phase 1 PoC (24.10~12): Implement Adaptive AUTOSAR on NXP S32G2</span><span class="lang lang-cn">第一阶段 PoC (24.10~12):在 NXP S32G2 上实现 Adaptive AUTOSAR</span><span class="lang lang-jp">第 1 段階 PoC (24.10~12):NXP S32G2 に Adaptive AUTOSAR 実装</span></li>
+            <li><span class="lang lang-ko active">2차 PoC (25.03~06): Classic AUTOSAR BMS → Adaptive AUTOSAR Migration</span><span class="lang lang-en">Phase 2 PoC (25.03~06): Classic AUTOSAR BMS → Adaptive AUTOSAR Migration</span><span class="lang lang-cn">第二阶段 PoC (25.03~06):Classic AUTOSAR BMS → Adaptive AUTOSAR 迁移</span><span class="lang lang-jp">第 2 段階 PoC (25.03~06):Classic AUTOSAR BMS → Adaptive AUTOSAR 移行</span></li>
+            <li><span class="lang lang-ko active">2025.05 일본 도요타·혼다에 고성능 제어기(HPC) 기반 BMS-IVI 가상 데모 시연</span><span class="lang lang-en">2025.05 Demonstrated virtual BMS-IVI demo based on HPC to Toyota & Honda in Japan</span><span class="lang lang-cn">2025.05 在日本向丰田·本田演示基于 HPC 的 BMS-IVI 虚拟演示</span><span class="lang lang-jp">2025.05 日本のトヨタ・ホンダに HPC ベース BMS-IVI 仮想デモを実演</span></li>
+            <li><span class="lang lang-ko active">고도화 프로젝트 연장 → BMS 솔루션 양산 수행 계획</span><span class="lang lang-en">Extended advanced project → Plan to perform BMS solution mass production</span><span class="lang lang-cn">扩展高级项目 → 计划执行 BMS 解决方案量产</span><span class="lang lang-jp">高度化プロジェクト延長 → BMS ソリューション量産実施予定</span></li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">기술 내용</span><span class="lang lang-en">Technical Details</span><span class="lang lang-cn">技术内容</span><span class="lang lang-jp">技術内容</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">S2S(CAN↔Ethernet) 게이트웨이로 CP(Vector)와 AP(PopcornSAR) 연동</span><span class="lang lang-en">S2S (CAN↔Ethernet) gateway connecting CP (Vector) and AP (PopcornSAR)</span><span class="lang lang-cn">S2S (CAN↔Ethernet) 网关连接 CP (Vector) 和 AP (PopcornSAR)</span><span class="lang lang-jp">S2S (CAN↔Ethernet) ゲートウェイで CP (Vector) と AP (PopcornSAR) を連携</span></li>
+            <li><span class="lang lang-ko active">HMI GUI 데모 대응 (Flutter 기반)</span><span class="lang lang-en">HMI GUI demo support (Flutter-based)</span><span class="lang lang-cn">HMI GUI 演示支持 (Flutter 基础)</span><span class="lang lang-jp">HMI GUI デモ対応 (Flutter ベース)</span></li>
+            <li><span class="lang lang-ko active">Classic AUTOSAR BMS SW 플랫폼 구축 및 내재화 지원</span><span class="lang lang-en">Classic AUTOSAR BMS SW platform development and localization support</span><span class="lang lang-cn">Classic AUTOSAR BMS 软件平台开发和本地化支持</span><span class="lang lang-jp">Classic AUTOSAR BMS SW プラットフォーム構築及び内在化支援</span></li>
+            <li><span class="lang lang-ko active">Simulink 호환성 검증 포함</span><span class="lang lang-en">Includes Simulink compatibility verification</span><span class="lang lang-cn">包括 Simulink 兼容性验证</span><span class="lang lang-jp">Simulink 互換性検証を含む</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="highlight" style="margin-top:10px">
+        <p><span class="lang lang-ko active">LG에너지솔루션의 BMS 프로젝트는 팝콘사가 BMS 분야에서 AUTOSAR 적용 경험과 Classic-Adaptive 마이그레이션 전문성을 보유하고 있음을 입증하는 핵심 레퍼런스입니다.</span><span class="lang lang-en">LG Energy Solution's BMS project is a key reference demonstrating PopcornSAR's AUTOSAR application experience and Classic-Adaptive migration expertise in the BMS domain.</span><span class="lang lang-cn">LG 能源解决方案的 BMS 项目是一个关键参考,展示了 PopcornSAR 在 BMS 领域的 AUTOSAR 应用经验和经典-自适应迁移专业知识。</span><span class="lang lang-jp">LG エネルギー ソリューションの BMS プロジェクトは、PopcornSAR が BMS 分野での AUTOSAR 適用経験と Classic-Adaptive 移行専門知識を保持していることを実証する主要な参考事例です。</span></p>
+      </div>
+      <div style="margin-top:16px">
+        <span class="tag tag-blue"><span class="lang lang-ko active">BMS</span><span class="lang lang-en">BMS</span><span class="lang lang-cn">BMS</span><span class="lang lang-jp">BMS</span></span>
+        <span class="tag tag-green"><span class="lang lang-ko active">Classic + Adaptive</span><span class="lang lang-en">Classic + Adaptive</span><span class="lang lang-cn">Classic + Adaptive</span><span class="lang lang-jp">Classic + Adaptive</span></span>
+        <span class="tag tag-accent"><span class="lang lang-ko active">도요타·혼다 시연</span><span class="lang lang-en">Toyota & Honda Demo</span><span class="lang lang-cn">丰田·本田演示</span><span class="lang lang-jp">トヨタ・ホンダ実演</span></span>
+        <span class="tag tag-purple"><span class="lang lang-ko active">2024~2025</span><span class="lang lang-en">2024~2025</span><span class="lang lang-cn">2024~2025</span><span class="lang lang-jp">2024~2025</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 12. SL(에스엘) - RESTRUCTURED ══ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="proj-header">
+        <div class="proj-label"><span class="lang lang-ko active">Project — SL Corporation</span><span class="lang lang-en">Project — SL Corporation</span><span class="lang lang-cn">项目 — SL 公司</span><span class="lang lang-jp">プロジェクト — SL 企業</span></div>
+        <div class="proj-client"><span class="lang lang-ko active">SL(에스엘)</span><span class="lang lang-en">SL Corporation</span><span class="lang lang-cn">SL Corporation</span><span class="lang lang-jp">SL（エスエル）</span></div>
+        <div class="proj-title"><span class="lang lang-ko active">PARVIS AI 기반 V-Model 자동화 솔루션 도입</span><span class="lang lang-en">PARVIS AI-Based V-Model Test Automation Solution Deployment</span><span class="lang lang-cn">基于 PARVIS AI 的 V-Model 测试自动化解决方案部署</span><span class="lang lang-jp">PARVIS AI ベース V-Model テスト自動化ソリューション導入</span></div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">고객 니즈</span><span class="lang lang-en">Customer Needs</span><span class="lang lang-cn">客户需求</span><span class="lang lang-jp">顧客ニーズ</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">자동차 조명 전문 기업 SL의 신뢰성연구센터 및 설계개발센터에서 V-Model 기반 테스트 자동화 필요</span><span class="lang lang-en">SL, an automotive lighting specialist, needed V-Model-based test automation at R&amp;D and development centers</span><span class="lang lang-cn">汽车照明专家 SL 需要在研发和开发中心进行基于 V-Model 的测试自动化</span><span class="lang lang-jp">自動車照明専門企業 SL が研究開発センターと開発センターで V-Model ベースのテスト自動化が必要</span></li>
+            <li><span class="lang lang-ko active">테스트케이스 생성·매핑의 정확성과 커버리지 향상 요구</span><span class="lang lang-en">Needed to improve accuracy and coverage of test case generation and mapping</span><span class="lang lang-cn">需要提高测试用例生成和映射的准确性和覆盖范围</span><span class="lang lang-jp">テストケース生成とマッピングの精度とカバレッジの向上が必要</span></li>
+            <li><span class="lang lang-ko active">AI 기반 솔루션을 통한 개발 생산성 및 품질 향상 추구</span><span class="lang lang-en">Sought productivity and quality improvements through AI-based solutions</span><span class="lang lang-cn">通过基于 AI 的解决方案寻求生产力和质量改进</span><span class="lang lang-jp">AI ベースのソリューションを通じて生産性と品質の向上を追求</span></li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h4><span class="lang lang-ko active">팝콘사의 강점 및 수행 내용</span><span class="lang lang-en">PopcornSAR Strengths &amp; Deliverables</span><span class="lang lang-cn">PopcornSAR 优势和交付成果</span><span class="lang lang-jp">PopcornSAR の強みと成果物</span></h4>
+          <ul>
+            <li><span class="lang lang-ko active">PARVIS: AI 기반 V-Model 자동화 솔루션 (요구사항→설계→검증 전 과정 AI 지원)</span><span class="lang lang-en">PARVIS: AI-based V-Model automation solution (AI support across requirements→design→verification)</span><span class="lang lang-cn">PARVIS：基于 AI 的 V-Model 自动化解决方案（需求→设计→验证全过程 AI 支持）</span><span class="lang lang-jp">PARVIS：AI ベース V-Model 自動化ソリューション（要件→設計→検証 全過程 AI サポート）</span></li>
+            <li><span class="lang lang-ko active">테스트케이스 생성 커버리지 100% 달성</span><span class="lang lang-en">Achieved 100% test case generation coverage</span><span class="lang lang-cn">实现了 100% 测试用例生成覆盖</span><span class="lang lang-jp">テストケース生成 100% カバレッジ達成</span></li>
+            <li><span class="lang lang-ko active">테스트케이스 매핑 정확성 98% 이상 검증</span><span class="lang lang-en">Verified 98%+ test case mapping accuracy</span><span class="lang lang-cn">验证了 98%+ 测试用例映射准确性</span><span class="lang lang-jp">テストケースマッピング精度 98%以上検証</span></li>
+            <li><span class="lang lang-ko active">FDE(Field-Deployable Edition) 교육 및 커스터마이즈 계약 체결</span><span class="lang lang-en">FDE (Field-Deployable Edition) training and customization contract executed</span><span class="lang lang-cn">FDE（现场可部署版本）培训和定制化合同执行</span><span class="lang lang-jp">FDE（フィールドデプロイ版）トレーニングとカスタマイズ契約実行</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="proj-section proj-full" style="margin-top:16px">
+        <h4><span class="lang lang-ko active">프로젝트의 의미</span><span class="lang lang-en">Project Significance</span><span class="lang lang-cn">项目意义</span><span class="lang lang-jp">プロジェクトの意義</span></h4>
+        <p><span class="lang lang-ko active">AI 챔피언 대회에서 PARVIS를 발견한 SL이 실증평가를 거쳐 서브스크립션 및 커스터마이즈 계약을 체결. AI 기반 V-Model 자동화의 실전 적용 가능성을 입증한 사례.</span><span class="lang lang-en">SL discovered PARVIS at the AI Champion competition and, after proof-of-concept evaluation, signed subscription and customization contracts. A case demonstrating real-world applicability of AI-based V-Model automation.</span><span class="lang lang-cn">SL 在 AI 冠军大赛中发现了 PARVIS，经过概念验证评估后签订了订阅和定制化合同。这是一个展示基于 AI 的 V-Model 自动化实际应用可能性的案例。</span><span class="lang lang-jp">SL が AI チャンピオン大会で PARVIS を発見し、概念実証評価を経てサブスクリプションとカスタマイズ契約を締結。AI ベース V-Model 自動化の実践的適用可能性を実証した事例。</span></p>
+        <div class="proj-tags" style="margin-top:14px">
+          <span class="tag tag-blue">PARVIS</span>
+          <span class="tag tag-green">AI V-Model</span>
+          <span class="tag tag-accent"><span class="lang lang-ko active">테스트 자동화</span><span class="lang lang-en">Test Automation</span><span class="lang lang-cn">测试自动化</span><span class="lang lang-jp">テスト自動化</span></span>
+          <span class="tag tag-purple"><span class="lang lang-ko active">2025~2026</span><span class="lang lang-en">2025~2026</span><span class="lang lang-cn">2025~2026</span><span class="lang lang-jp">2025~2026</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 13. CHAPTER COVER: 글로벌 활동 ══ -->
+  <div class="slide section">
+    <div class="slide-inner" style="text-align:center">
+      <h2 style="font-size:72px;margin-bottom:20px"><span class="lang lang-ko active">글로벌 활동</span><span class="lang lang-en">Global Activities</span><span class="lang lang-cn">全球活动</span><span class="lang lang-jp">グローバル活動</span></h2>
+    </div>
+  </div>
+
+  <!-- ══ 13. GLOBAL SDV CONSORTIUMS ══ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label"><span class="lang lang-ko active">Global SDV Consortiums</span><span class="lang lang-en">Global SDV Consortiums</span><span class="lang lang-cn">全球 SDV 联盟</span><span class="lang lang-jp">グローバル SDV コンソーシアム</span></div>
+      <h2><span class="lang lang-ko active">글로벌 SDV 컨소시엄 참여</span><span class="lang lang-en">Participation in Global SDV Consortiums</span><span class="lang lang-cn">参与全球 SDV 联盟</span><span class="lang lang-jp">グローバル SDV コンソーシアム参加</span></h2>
+      <div class="card-grid cards-5" style="margin-top:36px">
+        <div class="card" style="border-left:4px solid var(--accent)">
+          <h4 style="color:var(--accent)">OSDVI — <span class="lang lang-ko active">일본</span><span class="lang lang-en">Japan</span><span class="lang lang-cn">日本</span><span class="lang lang-jp">日本</span></h4>
+          <p><span class="lang lang-ko active">일본의 자동차 산업 연합회 주도의 SDV 표준화 프로젝트. 팝콘사는 AIDV 플랫폼 기술 공유 및 상호 호환성 검증에 참여.</span><span class="lang lang-en">Japan's automotive industry-led SDV standardization project. PopcornSAR participates in AIDV platform technology sharing and interoperability verification.</span><span class="lang lang-cn">日本汽车工业协会主导的 SDV 标准化项目。PopcornSAR 参与 AIDV 平台技术共享和互操作性验证。</span><span class="lang lang-jp">日本の自動車産業協会主導の SDV 標準化プロジェクト。PopcornSAR は AIDV プラットフォーム技術共有と相互運用性検証に参加。</span></p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--blue)">
+          <h4 style="color:var(--blue-light)">SDVerse — <span class="lang lang-ko active">미국 · GM</span><span class="lang lang-en">USA · GM</span><span class="lang lang-cn">美国·通用</span><span class="lang lang-jp">米国・GM</span></h4>
+          <p><span class="lang lang-ko active">GM 주도의 SDV 에코시스템. 팝콘사는 AUTOSAR 기반 미들웨어 호환성 테스트 및 성능 벤치마크 참여.</span><span class="lang lang-en">GM-led SDV ecosystem. PopcornSAR participates in AUTOSAR-based middleware compatibility testing and performance benchmarking.</span><span class="lang lang-cn">通用 GM 主导的 SDV 生态系统。PopcornSAR 参与基于 AUTOSAR 的中间件兼容性测试和性能基准测试。</span><span class="lang lang-jp">GM リード SDV エコシステム。PopcornSAR は AUTOSAR ベースのミドルウェア互換性テストとパフォーマンス ベンチマークに参加。</span></p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--green)">
+          <h4 style="color:var(--green)">Digital.auto — <span class="lang lang-ko active">Bosch</span><span class="lang lang-en">Bosch</span><span class="lang lang-cn">博世</span><span class="lang lang-jp">ボッシュ</span></h4>
+          <p><span class="lang lang-ko active">Bosch 주도의 개방형 자동차 소프트웨어 플랫폼. 팝콘사는 클라우드 기반 개발 도구 및 시뮬레이션 환경 구축 참여.</span><span class="lang lang-en">Bosch-led open automotive software platform. PopcornSAR participates in cloud-based development tools and simulation environment development.</span><span class="lang lang-cn">博世主导的开放式汽车软件平台。PopcornSAR 参与基于云的开发工具和仿真环境开发。</span><span class="lang lang-jp">ボッシュ主導のオープン自動車ソフトウェア プラットフォーム。PopcornSAR はクラウド ベースの開発ツールとシミュレーション環境構築に参加。</span></p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--purple)">
+          <h4 style="color:var(--purple)"><span class="lang lang-ko active">현대모비스 SDV 컨소시엄</span><span class="lang lang-en">Hyundai Mobis SDV Consortium</span><span class="lang lang-cn">现代摩比斯 SDV 联盟</span><span class="lang lang-jp">ヒュンダイ モービス SDV コンソーシアム</span> — <span class="lang lang-ko active">한국</span><span class="lang lang-en">Korea</span><span class="lang lang-cn">韩国</span><span class="lang lang-jp">韓国</span></h4>
+          <p><span class="lang lang-ko active">현대모비스 주도의 국내 SDV 기술 개발 및 표준화 프로젝트. 팝콘사는 AUTOSAR Adaptive 및 미들웨어 스택 개발에 핵심 역할 수행.</span><span class="lang lang-en">Hyundai Mobis-led domestic SDV technology development and standardization project. PopcornSAR plays a key role in AUTOSAR Adaptive and middleware stack development.</span><span class="lang lang-cn">现代摩比斯主导的国内 SDV 技术开发和标准化项目。PopcornSAR 在 AUTOSAR Adaptive 和中间件堆栈开发中发挥关键作用。</span><span class="lang lang-jp">ヒュンダイ モービス主導の国内 SDV 技術開発と標準化プロジェクト。PopcornSAR は AUTOSAR Adaptive とミドルウェア スタック開発で重要な役割を果たしています。</span></p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--red)">
+          <h4 style="color:var(--red)">K-SDV — <span class="lang lang-ko active">한국</span><span class="lang lang-en">Korea</span><span class="lang lang-cn">韩国</span><span class="lang lang-jp">韓国</span></h4>
+          <p><span class="lang lang-ko active">한국 정부 주도의 SDV 국가 표준 제정 프로젝트. 팝콘사는 스타트업 중 유일하게 참여하여 한국 SDV 표준 제정에 일조. 매달 2회 이상 정기 회의를 통해 표준 규격 논의 및 기술 검토 수행. 2026년 12월 KS 표준 완료 목표.</span><span class="lang lang-en">Government-led Korean SDV national standardization project. PopcornSAR is the only startup participating, contributing to Korean SDV standard development. Conducts standard specification discussions and technology reviews through bi-monthly meetings. Target: KS standard completion by December 2026.</span><span class="lang lang-cn">韩国政府主导的 SDV 国家标准制定项目。PopcornSAR 是唯一参与的初创公司，为韩国 SDV 标准制定做贡献。通过每月至少两次的定期会议进行标准规范讨论和技术审查。目标:2026 年 12 月完成 KS 标准。</span><span class="lang lang-jp">韓国政府主導の SDV 国家標準制定プロジェクト。PopcornSAR は唯一の参加スタートアップであり、韓国 SDV 標準制定に貢献しています。月 2 回以上の定期会議を通じて標準仕様の議論と技術審査を実施。目標:2026 年 12 月までに KS 標準完成。</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 14. CLOSING ══ -->
+  <div class="slide cover" style="background:linear-gradient(135deg,#1A1F2E 0%,#2D4059 50%,#1A3A52 100%)">
+    <div class="slide-inner" style="text-align:center">
+      <h2 style="font-size:52px;margin-bottom:32px"><span class="lang lang-ko active">감사합니다</span><span class="lang lang-en">Thank You</span><span class="lang lang-cn">谢谢</span><span class="lang lang-jp">ありがとうございます</span></h2>
+      <p style="font-size:24px;color:var(--text-dim);margin-bottom:40px;line-height:1.8"><span class="lang lang-ko active">팝콘사의 AUTOSAR 및 AI 기술이 장성모터스에 도움이 되기를 바랍니다.</span><span class="lang lang-en">We hope PopcornSAR's AUTOSAR and AI technology can be of value to Jangseong Motors.</span><span class="lang lang-cn">希望 PopcornSAR 的 AUTOSAR 和 AI 技术能为长城汽车提供帮助。</span><span class="lang lang-jp">PopcornSAR の AUTOSAR と AI 技術が、장성모터스 のお役に立てれば幸いです。</span></p>
+      <div style="display:flex;gap:40px;justify-content:center;flex-wrap:wrap;margin-top:48px">
+        <div>
+          <div style="font-size:18px;color:var(--text-muted);margin-bottom:8px"><span class="lang lang-ko active">웹사이트</span><span class="lang lang-en">Website</span><span class="lang lang-cn">网站</span><span class="lang lang-jp">ウェブサイト</span></div>
+          <div style="font-size:20px;color:var(--white);font-weight:600">autosar.io</div>
+        </div>
+        <div>
+          <div style="font-size:18px;color:var(--text-muted);margin-bottom:8px"><span class="lang lang-ko active">이메일</span><span class="lang lang-en">Email</span><span class="lang lang-cn">电子邮件</span><span class="lang lang-jp">メール</span></div>
+          <div style="font-size:20px;color:var(--white);font-weight:600">contact@popcornsar.com</div>
+        </div>
+      </div>
+      <div style="margin-top:60px;font-size:16px;color:var(--text-muted)"><span class="lang lang-ko active">© 2026 PopcornSAR. All Rights Reserved.</span><span class="lang lang-en">© 2026 PopcornSAR. All Rights Reserved.</span><span class="lang lang-cn">© 2026 PopcornSAR. 保留所有权利。</span><span class="lang lang-jp">© 2026 PopcornSAR. すべての権利を保有します。</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="nav-hint"><span class="lang lang-ko active">↑ ↓ 방향키 또는 클릭으로 이동</span><span class="lang lang-en">↑ ↓ Arrow keys or click to navigate</span><span class="lang lang-cn">↑ ↓ 方向键或点击导航</span><span class="lang lang-jp">↑ ↓ 矢印キーまたはクリックで移動</span></div>
+<div class="slide-nav">
+  <div class="slide-counter"><span id="slideCounter">1</span> / 15</div>
+  <div class="nav-dots" id="navDots"></div>
+</div>
+
+<script>
+const TOTAL_SLIDES = 15;
+let currentSlide = 0;
+
+const slides = document.querySelectorAll('.slide');
+const progressBar = document.getElementById('progressBar');
+const slideCounter = document.getElementById('slideCounter');
+const navDots = document.getElementById('navDots');
+const langBtns = document.querySelectorAll('.lang-btn');
+
+// Initialize navigation dots
+for (let i = 0; i < TOTAL_SLIDES; i++) {
+  const dot = document.createElement('button');
+  dot.className = 'dot';
+  if (i === 0) dot.classList.add('active');
+  dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+  dot.addEventListener('click', () => goToSlide(i));
+  navDots.appendChild(dot);
+}
+
+function updateUI() {
+  const dots = document.querySelectorAll('.dot');
+  dots.forEach((dot, idx) => {
+    dot.classList.toggle('active', idx === currentSlide);
+  });
+
+  slides.forEach((slide, idx) => {
+    slide.classList.toggle('active', idx === currentSlide);
+  });
+
+  slideCounter.textContent = currentSlide + 1;
+  progressBar.style.width = ((currentSlide + 1) / TOTAL_SLIDES * 100) + '%';
+}
+
+function goToSlide(n) {
+  currentSlide = Math.max(0, Math.min(n, TOTAL_SLIDES - 1));
+  updateUI();
+}
+
+function nextSlide() {
+  goToSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+  goToSlide(currentSlide - 1);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    nextSlide();
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    prevSlide();
+  }
+});
+
+// Click navigation - avoid interfering with language selector and nav dots
+document.addEventListener('click', e => {
+  if(e.target.closest('.nav-dots') || e.target.closest('.lang-selector') || e.target.closest('a')) return;
+  e.clientX > window.innerWidth / 2 ? nextSlide() : prevSlide();
+});
+
+// Touch/swipe navigation
+let touchStartX = 0;
+document.addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+});
+
+document.addEventListener('touchend', (e) => {
+  const touchEndX = e.changedTouches[0].clientX;
+  if (touchStartX - touchEndX > 50) nextSlide();
+  if (touchEndX - touchStartX > 50) prevSlide();
+});
+
+// Language switching
+const fontMap={cn:"'Noto Sans SC'",jp:"'Noto Sans JP'",ko:"'Pretendard'",en:"'Pretendard'"};
+langBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const lang = btn.dataset.lang;
+
+    // Update button active state
+    langBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Update language visibility
+    document.querySelectorAll('.lang').forEach(el => {
+      el.classList.remove('active');
+    });
+
+    document.querySelectorAll(`.lang-${lang}`).forEach(el => {
+      el.classList.add('active');
+    });
+
+    // Switch font for CJK languages
+    document.body.style.fontFamily=fontMap[lang]+",-apple-system,sans-serif";
+  });
+});
+
+// Initialize
+updateUI();
+</script>
+</body>
+</html>

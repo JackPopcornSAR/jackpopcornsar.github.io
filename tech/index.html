@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PopcornSAR Technical Capabilities — 장성모터스</title>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap');
+:root {
+  --bg:#0F1419; --bg-card:#1A2332; --bg-card2:#1E293B; --border:#2D3B4E;
+  --text:#E2E8F0; --text-dim:#94A3B8; --text-muted:#64748B;
+  --blue:#3B82F6; --blue-light:#60A5FA; --blue-bg:rgba(59,130,246,.12);
+  --accent:#F59E0B; --accent-bg:rgba(245,158,11,.12);
+  --green:#10B981; --green-bg:rgba(16,185,129,.12);
+  --purple:#8B5CF6; --purple-bg:rgba(139,92,246,.12);
+  --red:#EF4444; --teal:#00D4AA; --teal-bg:rgba(0,212,170,.12);
+  --white:#fff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%}
+body{font-family:'Pretendard',-apple-system,sans-serif;background:#000;overflow:hidden;color:var(--text)}
+.deck{position:fixed;top:0;left:0;width:100%;height:100%}
+.slide{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:50px 70px;opacity:0;pointer-events:none;transition:opacity .4s;background:var(--bg);overflow-y:auto}
+.slide.active{opacity:1;pointer-events:auto}
+.slide-inner{width:100%;max-width:1200px;position:relative}
+.progress-bar{position:fixed;top:0;left:0;height:4px;background:var(--blue);z-index:100;transition:width .3s}
+.slide-nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:100;background:rgba(26,35,50,.9);padding:10px 24px;border-radius:24px;backdrop-filter:blur(8px);border:1px solid var(--border)}
+.slide-counter{color:var(--text-dim);font-size:16px;font-weight:500;min-width:80px;text-align:center}
+.nav-dots{display:flex;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .2s}
+.dot.active{background:var(--blue);transform:scale(1.3)}
+.nav-hint{position:fixed;bottom:75px;left:50%;transform:translateX(-50%);color:var(--text-muted);font-size:14px;z-index:100;pointer-events:none}
+.lang-switcher{position:fixed;top:20px;right:20px;z-index:200;display:flex;gap:4px;background:rgba(26,35,50,.9);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:16px;padding:4px}
+.lang-btn{padding:6px 14px;border:none;background:transparent;color:var(--text-muted);font-size:13px;font-weight:500;cursor:pointer;border-radius:12px;transition:all .3s;font-family:inherit}
+.lang-btn.active{background:var(--blue);color:#fff;font-weight:600}
+.lang-btn:hover:not(.active){color:var(--text);background:rgba(255,255,255,.05)}
+.slide.cover{background:linear-gradient(135deg,#0B1120 0%,#162035 50%,#1A2744 100%)}
+.slide.section{background:linear-gradient(135deg,#0D1526 0%,#1E3A5F 100%)}
+.slide.gradient-cp{background:linear-gradient(135deg,#0F1A1F 0%,#162B35 50%,#1A3544 100%)}
+.slide.gradient-ap{background:linear-gradient(135deg,#0F1430 0%,#1E1055 100%)}
+h1{font-size:64px;font-weight:800;line-height:1.25;margin-bottom:24px;letter-spacing:-1.5px}
+h2{font-size:48px;font-weight:700;line-height:1.3;margin-bottom:18px}
+h3{font-size:30px;font-weight:700;margin-bottom:14px}
+.subtitle{font-size:28px;font-weight:300;opacity:.6;margin-bottom:36px}
+.label{font-size:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue-light);margin-bottom:14px}
+.slide.cover .label{color:var(--accent)}
+.slide.gradient-cp .label,.slide.gradient-ap .label{color:var(--accent)}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:22px 0}
+.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin:22px 0}
+.card{background:var(--bg-card);border-radius:18px;padding:30px 32px;border:1px solid var(--border)}
+.card h4{font-size:24px;font-weight:700;color:var(--white);margin-bottom:8px}
+.card p{font-size:20px;color:var(--text-dim);line-height:1.7}
+.tag{display:inline-block;padding:5px 16px;border-radius:18px;font-size:16px;font-weight:600;margin:3px}
+.tag-blue{background:var(--blue-bg);color:var(--blue-light)}
+.tag-green{background:var(--green-bg);color:var(--green)}
+.tag-accent{background:var(--accent-bg);color:var(--accent)}
+.tag-purple{background:var(--purple-bg);color:var(--purple)}
+.tag-teal{background:var(--teal-bg);color:var(--teal)}
+.tag-dark{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.stat-row{display:flex;gap:28px;margin:28px 0}
+.stat-box{flex:1;background:var(--bg-card);border-radius:18px;padding:30px;text-align:center;border:1px solid var(--border);border-left:5px solid var(--blue)}
+.stat-box .num{font-size:44px;font-weight:900;color:var(--white)}
+.stat-box .lbl{font-size:18px;color:var(--text-muted);margin-top:6px}
+.highlight{background:var(--bg-card2);border-left:5px solid var(--blue);border-radius:0 16px 16px 0;padding:24px 30px;margin:22px 0}
+.highlight h4{color:var(--blue-light);font-size:22px;margin-bottom:8px}
+.highlight p{font-size:20px;color:var(--text-dim);line-height:1.7}
+.flow{display:flex;align-items:center;gap:0;margin:28px 0;flex-wrap:wrap}
+.flow-step{background:var(--bg-card);border-radius:16px;padding:20px 26px;text-align:center;position:relative;flex:1;min-width:150px;border:1px solid var(--border)}
+.flow-step h5{font-size:19px;font-weight:700;color:var(--white);margin-bottom:4px}
+.flow-step p{font-size:15px;color:var(--text-muted)}
+.flow-arrow{font-size:28px;color:var(--blue-light);font-weight:900;padding:0 8px;flex-shrink:0}
+.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin:20px 0}
+.module{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:14px 16px;font-size:19px;font-weight:600;color:var(--blue-light);text-align:center}
+.module .sub{font-size:14px;font-weight:400;color:var(--text-muted);margin-top:2px}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:20px}
+th{background:var(--bg-card2);color:var(--text);padding:14px 20px;text-align:left;font-weight:600;font-size:18px;border-bottom:2px solid var(--border)}
+td{padding:14px 20px;border-bottom:1px solid var(--border);color:var(--text-dim)}
+tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.ai-feature{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:20px 0}
+.ai-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;position:relative;overflow:hidden}
+.ai-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--teal)}
+.ai-card .ai-icon{font-size:36px;margin-bottom:10px}
+.ai-card h5{font-size:20px;font-weight:700;color:var(--white);margin-bottom:6px}
+.ai-card p{font-size:16px;color:var(--text-muted);line-height:1.6}
+@media(max-width:768px){
+  .slide{padding:36px 24px}
+  h1{font-size:40px} h2{font-size:32px}
+  .card-grid,.card-grid-3,.ai-feature{grid-template-columns:1fr}
+  .stat-row{flex-direction:column}
+  .flow{flex-direction:column;gap:10px}
+  .flow-arrow{transform:rotate(90deg)}
+  .lang-switcher{top:10px;right:10px;padding:2px}
+  .lang-btn{padding:4px 10px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="lang-switcher">
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" data-lang="zh" onclick="setLang('zh')">中文</button>
+    <button class="lang-btn active" data-lang="ko" onclick="setLang('ko')">한국어</button>
+    <button class="lang-btn" data-lang="ja" onclick="setLang('ja')">日本語</button>
+  </div>
+  <div id="progressBar" class="progress-bar"></div>
+
+  <!-- 1. COVER -->
+  <div class="slide cover active">
+    <div class="slide-inner" style="text-align:center">
+      <div class="label" data-en="Technical Capabilities for GWM" data-zh="Technical Capabilities for GWM" data-ko="Technical Capabilities for 장성모터스" data-ja="長城汽車向け技術力紹介">Technical Capabilities for 장성모터스</div>
+      <h1 style="font-size:70px;">PopcornSAR<br><span style="font-size:44px;font-weight:400;opacity:.6" data-en="AUTOSAR Technical Capabilities" data-zh="AUTOSAR 技术力介绍" data-ko="AUTOSAR 기술력 소개" data-ja="AUTOSAR 技術力紹介">AUTOSAR 기술력 소개</span></h1>
+      <p class="subtitle" data-en="Classic Platform · Adaptive Platform · PAIO AI · Complete Tool-chain" data-zh="Classic Platform · Adaptive Platform · PAIO AI · Complete Tool-chain" data-ko="Classic Platform · Adaptive Platform · PAIO AI · Complete Tool-chain" data-ja="Classic Platform · Adaptive Platform · PAIO AI · Complete Tool-chain">Classic Platform · Adaptive Platform · PAIO AI · Complete Tool-chain</p>
+      <div style="width:120px;height:4px;background:var(--accent);margin:0 auto 40px;border-radius:2px"></div>
+      <p style="font-size:20px;opacity:.5" data-en="AI-powered AUTOSAR development — Improving work efficiency with intelligent automation" data-zh="AI驱动的AUTOSAR开发——通过智能自动化提升工作效率" data-ko="AI 기반 AUTOSAR 개발 — 지능형 자동화로 업무 효율 극대화" data-ja="AIベースAUTOSAR開発 — インテリジェント自動化で業務効率を最大化">AI 기반 AUTOSAR 개발 — 지능형 자동화로 업무 효율 극대화</p>
+      <p style="font-size:18px;opacity:.35;margin-top:10px" data-en="April 2026" data-zh="2026年4月" data-ko="2026년 4월" data-ja="2026年4月">2026년 4월</p>
+    </div>
+  </div>
+
+  <!-- 2. SECTION CP -->
+  <div class="slide gradient-cp">
+    <div class="slide-inner" style="text-align:center">
+      <div class="label" data-en="Part 1" data-zh="第一部分" data-ko="Part 1" data-ja="第1部">Part 1</div>
+      <h1 data-en="AUTOSAR Classic Platform" data-zh="AUTOSAR Classic Platform" data-ko="AUTOSAR Classic Platform" data-ja="AUTOSAR Classic Platform">AUTOSAR Classic Platform</h1>
+      <p class="subtitle" data-en="Proven technology for resource-constrained ECU development" data-zh="面向资源受限ECU开发的成熟技术" data-ko="리소스 제약 ECU 개발을 위한 검증된 기술" data-ja="リソース制約ECU開発のための実証済み技術">리소스 제약 ECU 개발을 위한 검증된 기술</p>
+      <div style="display:flex;justify-content:center;gap:16px;margin-top:32px;flex-wrap:wrap">
+        <span class="tag tag-dark" data-en="System Design" data-zh="System Design" data-ko="System Design" data-ja="システム設計">System Design</span>
+        <span class="tag tag-dark" data-en="ECU Configuration" data-zh="ECU Configuration" data-ko="ECU Configuration" data-ja="ECU設定">ECU Configuration</span>
+        <span class="tag tag-dark" data-en="BSW / MCAL / RTE" data-zh="BSW / MCAL / RTE" data-ko="BSW / MCAL / RTE" data-ja="BSW / MCAL / RTE">BSW / MCAL / RTE</span>
+        <span class="tag tag-dark" data-en="Code Generation" data-zh="Code Generation" data-ko="Code Generation" data-ja="コード生成">Code Generation</span>
+        <span class="tag tag-dark" data-en="43-50 Module Support" data-zh="支持43~50个模块" data-ko="43~50 모듈 지원" data-ja="43~50モジュール対応">43~50 모듈 지원</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. CP WORKFLOW -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="Classic Platform — Workflow" data-zh="Classic Platform — 工作流程" data-ko="Classic Platform — Workflow" data-ja="Classic Platform — ワークフロー">Classic Platform — Workflow</div>
+      <h2 data-en="CP Development Workflow" data-zh="CP Development Workflow" data-ko="CP 개발 워크플로우" data-ja="CP開発ワークフロー">CP 개발 워크플로우</h2>
+      <p style="font-size:22px;color:var(--text-dim);margin-bottom:10px"><span data-en="70% of Classic AUTOSAR development is ARXML generation. PopcornSAR's PAIO automates this with AI." data-zh="Classic AUTOSAR 开发过程的 70% 是 ARXML 生成工作。PopcornSAR 的 PAIO 通过 AI 实现自动化。" data-ko="Classic AUTOSAR 개발 과정의 70%는 ARXML 생성 작업입니다. 팝콘사의 PAIO는 AI로 이 과정을 자동화합니다." data-ja="Classic AUTOSAR開発プロセスの70%はARXML生成作業です。PopcornSARのPAIOはAIでこのプロセスを自動化します。">Classic AUTOSAR 개발 과정의 <strong style="color:var(--white)">70%는 ARXML 생성 작업</strong>입니다. 팝콘사의 PAIO는 AI로 이 과정을 자동화합니다.</span></p>
+      <div class="flow">
+        <div class="flow-step" style="border-top:3px solid var(--blue-light)">
+          <h5 data-en="System Design" data-zh="System Design" data-ko="System Design" data-ja="システム設計">System Design</h5>
+          <p data-en="ECU Topology / Signal & Network Definition" data-zh="ECU 拓扑 / 信号·网络定义" data-ko="ECU 토폴로지 / 시그널·네트워크 정의" data-ja="ECUトポロジー / シグナル・ネットワーク定義">ECU 토폴로지 / 시그널·네트워크 정의</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-top:3px solid var(--blue-light)">
+          <h5 data-en="ECU Configuration" data-zh="ECU Configuration" data-ko="ECU Configuration" data-ja="ECU設定">ECU Configuration</h5>
+          <p data-en="BSW Module Config / MCAL Setup" data-zh="BSW 模块设置 / MCAL 构成" data-ko="BSW 모듈 설정 / MCAL 구성" data-ja="BSWモジュール設定 / MCAL構成">BSW 모듈 설정 / MCAL 구성</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-top:3px solid var(--green)">
+          <h5 data-en="Code Generation" data-zh="Code Generation" data-ko="Code Generation" data-ja="コード生成">Code Generation</h5>
+          <p data-en="Auto C Code Gen / ARXML → Executable" data-zh="C代码自动生成 / ARXML→可执行代码" data-ko="C 코드 자동 생성 / ARXML → 실행 코드" data-ja="Cコード自動生成 / ARXML→実行コード">C 코드 자동 생성 / ARXML → 실행 코드</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-top:3px solid var(--accent)">
+          <h5 data-en="Integration" data-zh="Integration" data-ko="Integration" data-ja="統合">Integration</h5>
+          <p data-en="BSW + App Integration / Verification & Optimization" data-zh="BSW+App集成 / 验证·优化" data-ko="BSW + App 통합 / 검증·최적화" data-ja="BSW+App統合 / 検証・最適化">BSW + App 통합 / 검증·최적화</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-top:3px solid var(--red)">
+          <h5 data-en="Deployment" data-zh="Deployment" data-ko="Deployment" data-ja="デプロイ">Deployment</h5>
+          <p data-en="ECU Target Build / Production" data-zh="ECU 目标构建 / 量产应用" data-ko="ECU 타겟 빌드 / 양산 적용" data-ja="ECUターゲットビルド / 量産適用">ECU 타겟 빌드 / 양산 적용</p>
+        </div>
+      </div>
+      <div class="highlight">
+        <h4 data-en="PAIO's CP Support Scope" data-zh="PAIO 的 CP 支持范围" data-ko="PAIO의 CP 지원 범위" data-ja="PAIOのCP対応範囲">PAIO의 CP 지원 범위</h4>
+        <p data-en="AI-based tool chain covering System Design → ECU Configuration → Code Generation. Additionally supports Ethernet Design and Diagnostic Design beyond Vector/ETAS tools." data-zh="AI 工具链覆盖 System Design → ECU Configuration → Code Generation。还支持 Vector/ETAS 工具不具备的 Ethernet Design 和 Diagnostic Design。" data-ko="System Design → ECU Configuration → Code Generation까지 AI 기반 도구 체인으로 지원합니다. 기존 Vector/ETAS 도구 대비 Ethernet Design과 Diagnostic Design을 추가로 지원하여 ECU 개발에 필요한 통신 설계와 진단 기능 설계를 동시에 수행할 수 있습니다." data-ja="System Design → ECU Configuration → Code GenerationまでAIベースのツールチェーンでサポートします。従来のVector/ETASツールと異なり、Ethernet DesignとDiagnostic Designを追加でサポートし、ECU開発に必要な通信設計と診断機能設計を同時に実施できます。"><strong style="color:var(--white)">System Design → ECU Configuration → Code Generation</strong>까지 AI 기반 도구 체인으로 지원합니다. 기존 Vector/ETAS 도구 대비 <strong style="color:var(--white)">Ethernet Design</strong>과 <strong style="color:var(--white)">Diagnostic Design</strong>을 추가로 지원하여 ECU 개발에 필요한 통신 설계와 진단 기능 설계를 동시에 수행할 수 있습니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. PAIO Core Tool -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="Core Tool — PAIO" data-zh="Core Tool — PAIO" data-ko="Core Tool — PAIO" data-ja="コアツール — PAIO">Core Tool — PAIO</div>
+      <h2 data-en="CP/AP Core Tool: PAIO" data-zh="CP/AP Core Tool: PAIO" data-ko="CP/AP 핵심 도구: PAIO" data-ja="CP/APコアツール：PAIO">CP/AP 핵심 도구: PAIO</h2>
+      <p style="font-size:20px;color:var(--text-dim);margin-bottom:16px" data-en="Next-generation AUTOSAR design automation solution integrating AI with AutoSAR.io" data-zh="集成 AI 与 AutoSAR.io 的下一代 AUTOSAR 设计自动化解决方案" data-ko="기존 AutoSAR.io에 AI를 통합한 차세대 AUTOSAR 설계 자동화 솔루션" data-ja="AutoSAR.ioにAIを統合した次世代AUTOSAR設計自動化ソリューション">기존 AutoSAR.io에 AI를 통합한 차세대 AUTOSAR 설계 자동화 솔루션</p>
+      <div class="stat-row">
+        <div class="stat-box"><div class="num">43~50</div><div class="lbl" data-en="AUTOSAR Modules" data-zh="AUTOSAR Modules" data-ko="AUTOSAR 모듈 지원" data-ja="AUTOSARモジュール対応">AUTOSAR 모듈 지원</div></div>
+        <div class="stat-box" style="border-left-color:var(--green)"><div class="num">100%</div><div class="lbl" data-en="AUTOSAR Compliance" data-zh="AUTOSAR Compliance" data-ko="AUTOSAR 규격 준수" data-ja="AUTOSAR規格準拠">AUTOSAR 규격 준수</div></div>
+        <div class="stat-box" style="border-left-color:var(--teal)"><div class="num">80%↑</div><div class="lbl" data-en="Design Time Reduction by AI" data-zh="Design Time Reduction by AI" data-ko="AI로 설계 시간 단축" data-ja="AIによる設計時間短縮">AI로 설계 시간 단축</div></div>
+      </div>
+      <div class="card-grid" style="margin-top:20px">
+        <div class="card" style="border-left:4px solid var(--blue-light)">
+          <h4 data-en="System Design" data-zh="System Design" data-ko="System Design" data-ja="システム設計">System Design</h4>
+          <p data-en="Perform ECU topology, VFB visualization, signal mapping, and network design in integrated GUI." data-zh="在集成 GUI 环境中执行 ECU 拓扑、VFB 可视化、信号映射和网络设计。" data-ko="ECU 토폴로지, VFB 시각화, 시그널 매핑, 네트워크 설계를 통합 GUI 환경에서 수행. SWC 구조를 시각적으로 설계합니다." data-ja="統合GUI環境でECUトポロジー、VFB可視化、シグナルマッピング、ネットワーク設計を実行。">ECU 토폴로지, VFB 시각화, 시그널 매핑, 네트워크 설계를 통합 GUI 환경에서 수행. SWC 구조를 시각적으로 설계합니다.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--green)">
+          <h4 data-en="ECU Configuration" data-zh="ECU Configuration" data-ko="ECU Configuration" data-ja="ECU設定">ECU Configuration</h4>
+          <p data-en="Automate BSW module parameter settings, MCAL configuration, and OS/RTE setup." data-zh="自动化 BSW 模块参数设置、MCAL 配置和 OS/RTE 设置。" data-ko="BSW 모듈 파라미터 설정, MCAL 구성, OS/RTE 설정을 자동화. 시각적 설정으로 수작업 ARXML 편집을 제거합니다." data-ja="BSWモジュールパラメータ設定、MCAL設定、OS/RTE設定を自動化。">BSW 모듈 파라미터 설정, MCAL 구성, OS/RTE 설정을 자동화. 시각적 설정으로 수작업 ARXML 편집을 제거합니다.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--accent)">
+          <h4 data-en="Ethernet Design" data-zh="Ethernet Design" data-ko="Ethernet Design" data-ja="イーサネット設計">Ethernet Design</h4>
+          <p data-en="Support next-generation Ethernet communication design beyond CAN/CAN-FD." data-zh="支持 CAN/CAN-FD 以外的下一代 Ethernet 通信设计。" data-ko="CAN/CAN-FD 외 차세대 Ethernet 통신 설계를 지원. DBC 변환, SOME/IP 설계까지 한 도구로 가능합니다." data-ja="CAN/CAN-FDを超えた次世代イーサネット通信設計をサポート。">CAN/CAN-FD 외 차세대 <strong style="color:var(--white)">Ethernet 통신 설계</strong>를 지원. DBC 변환, SOME/IP 설계까지 한 도구로 가능합니다.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--purple)">
+          <h4 data-en="Diagnostic Design" data-zh="Diagnostic Design" data-ko="Diagnostic Design" data-ja="診断設計">Diagnostic Design</h4>
+          <p data-en="UDS (ISO 14229) diagnostic design. Configure DTC and DID with GUI." data-zh="UDS(ISO 14229) Diagnostic Design。用 GUI 配置 DTC 和 DID。" data-ko="UDS(ISO 14229) 진단 설계. DTC(진단코드), DID(데이터 식별자)를 GUI로 구성합니다." data-ja="UDS(ISO 14229)診断設計。DTC、DIDをGUIで構成します。">UDS(ISO 14229) 진단 설계. <strong style="color:var(--white)">DTC(진단코드)</strong>, <strong style="color:var(--white)">DID(데이터 식별자)</strong>를 GUI로 구성합니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. PAIO AI FEATURES -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="AI Transformation — PAIO" data-zh="AI Transformation — PAIO" data-ko="AI Transformation — PAIO" data-ja="AI変換 — PAIO">AI Transformation — PAIO</div>
+      <h2 data-en="PAIO AI Features" data-zh="PAIO AI Features" data-ko="PAIO AI 기능" data-ja="PAIO AI機能">PAIO AI 기능</h2>
+      <p style="font-size:20px;color:var(--text-dim);margin-bottom:16px" data-en="PAIO is equipped with PAIO Robo AI to automate the entire AUTOSAR design process." data-zh="PAIO 配备了 PAIO Robo AI，可通过 AI 自动化整个 AUTOSAR 设计过程。" data-ko="PAIO는 PAIO Robo AI를 탑재하여 AUTOSAR 설계 전 과정을 AI로 자동화합니다." data-ja="PAIOはPAIO Robo AIを搭載し、AUTOSAR設計全体をAIで自動化します。">PAIO는 <strong style="color:var(--teal)">PAIO Robo AI</strong>를 탑재하여 AUTOSAR 설계 전 과정을 AI로 자동화합니다.</p>
+      <div class="ai-feature">
+        <div class="ai-card"><div class="ai-icon">🤖</div><h5 data-en="PAIO Robo AI Chatbot" data-zh="PAIO Robo AI Chatbot" data-ko="PAIO Robo AI 챗봇" data-ja="PAIO Robo AIチャットボット">PAIO Robo AI 챗봇</h5><p data-en="AI performs automatic analysis and design with natural language instructions." data-zh="AI 根据自然语言指令执行自动分析和设计。" data-ko="자연어로 지시하면 AI가 자동 분석·설계 수행. 프로젝트 구조 분석, ECU/SWC 목록 자동 추출." data-ja="自然言語の指示でAIが自動分析・設計を実行。">자연어로 지시하면 AI가 자동 분석·설계 수행. 프로젝트 구조 분석, ECU/SWC 목록 자동 추출.</p></div>
+        <div class="ai-card"><div class="ai-icon">🔍</div><h5 data-en="AI Network Topology Analysis" data-zh="AI Network Topology Analysis" data-ko="AI 네트워크 토폴로지 분석" data-ja="AIネットワークトポロジー分析">AI 네트워크 토폴로지 분석</h5><p data-en="AI automatically analyzes IVC network topology and generates ECU list." data-zh="AI 自动分析 IVC 网络拓扑并生成 ECU 列表。" data-ko="IVC 네트워크 토폴로지를 AI가 자동 분석하고 ECU 목록을 생성. 분석 Summary까지 즉시 제공." data-ja="IVCネットワークトポロジーをAIが自動分析し、ECUリストを生成。">IVC 네트워크 토폴로지를 AI가 자동 분석하고 ECU 목록을 생성. 분석 Summary까지 즉시 제공.</p></div>
+        <div class="ai-card"><div class="ai-icon">🔗</div><h5 data-en="AI SWC-to-ECU Auto-mapping" data-zh="AI SWC-to-ECU Auto-mapping" data-ko="AI SWC-to-ECU 자동 매핑" data-ja="AI SWC-to-ECU自動マッピング">AI SWC-to-ECU 자동 매핑</h5><p data-en="AI automatically proposes SWC-to-ECU mapping with optimal strategies." data-zh="AI 自动提出 SWC-to-ECU 映射建议，推荐最优策略。" data-ko="SWC-to-ECU 매핑을 AI가 자동 제안. SameModule 등 최적 전략을 추천하여 정확도 향상." data-ja="SWC-to-ECUマッピングをAIが自動提案。最適戦略を推奨。">SWC-to-ECU 매핑을 AI가 자동 제안. SameModule 등 최적 전략을 추천하여 정확도 향상.</p></div>
+        <div class="ai-card"><div class="ai-icon">⚙️</div><h5 data-en="AI Auto Model Generation" data-zh="AI Auto Model Generation" data-ko="AI 자동 모델 생성" data-ja="AI自動モデル生成">AI 자동 모델 생성</h5><p data-en="AI automatically generates VFB model and SWC mapping through code execution." data-zh="AI 通过代码执行自动生成 VFB 模型和 SWC 映射。" data-ko="VFB 모델과 SWC 매핑을 AI가 코드 실행으로 자동 생성. Summary of Changes로 변경점 추적." data-ja="VFBモデルとSWCマッピングをAIがコード実行で自動生成。">VFB 모델과 SWC 매핑을 AI가 코드 실행으로 자동 생성. Summary of Changes로 변경점 추적.</p></div>
+        <div class="ai-card"><div class="ai-icon">✅</div><h5 data-en="AI CAN Frame Validation" data-zh="AI CAN Frame Validation" data-ko="AI CAN Frame 검증" data-ja="AI CAN フレーム検証">AI CAN Frame 검증</h5><p data-en="AI automatically validates CAN frame allocation in real-time." data-zh="AI 实时自动验证 CAN 帧分配。" data-ko="CAN Frame 할당을 AI가 실시간 자동 검증. Frame Count Summary로 설계 단계에서 오류 즉시 발견." data-ja="CANフレーム割り当てをAIがリアルタイム自動検証。">CAN Frame 할당을 AI가 실시간 자동 검증. Frame Count Summary로 설계 단계에서 오류 즉시 발견.</p></div>
+        <div class="ai-card"><div class="ai-icon">📝</div><h5 data-en="PAIO Notes Auto-documentation" data-zh="PAIO Notes自动文档化" data-ko="PAIO Notes 자동 문서화" data-ja="PAIO Notes自動ドキュメンテーション">PAIO Notes 자동 문서화</h5><p data-en="Automatically record workflow and generate Architecture Quality scores." data-zh="自动记录工作流并生成Architecture Quality评分。" data-ko="작업 흐름을 단계별 자동 기록. Architecture Quality 점수, Talking Points 자동 생성으로 리뷰 준비 절감." data-ja="ワークフローを段階的に自動記録。Architecture Qualityスコアを自動生成。">작업 흐름을 단계별 자동 기록. Architecture Quality 점수, Talking Points 자동 생성으로 리뷰 준비 절감.</p></div>
+      </div>
+      <div class="highlight" style="border-left-color:var(--teal)">
+        <h4 style="color:var(--teal)" data-en="AX (AI Transformation)" data-zh="AX (AI转换)" data-ko="AX (AI Transformation)" data-ja="AX (AI変換)">AX (AI Transformation)</h4>
+        <p data-en="PAIO converts manual AUTOSAR design into AI automation to achieve 80% design time reduction and 100% design verification coverage." data-zh="PAIO将手动AUTOSAR设计转换为AI自动化，实现80%设计时间缩短和100%设计验证覆盖率。" data-ko="PAIO는 수동 AUTOSAR 설계를 AI 자동화로 전환하여 설계 시간 80% 단축, 100% 설계 검증 커버리지, 자동 문서 생성을 실현합니다." data-ja="PAIOは手動AUTOSAR設計をAI自動化に変換し、設計時間80%削減、100%設計検証カバレッジを実現します。">PAIO는 수동 AUTOSAR 설계를 AI 자동화로 전환하여 <strong style="color:var(--white)">설계 시간 80% 단축</strong>, <strong style="color:var(--white)">100% 설계 검증 커버리지</strong>, 자동 문서 생성을 실현합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. PAIO LLM & ALL-IN-ONE (NEW) -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="PAIO — AI & All-in-One" data-zh="PAIO — AI与一体化" data-ko="PAIO — AI & All-in-One" data-ja="PAIO — AI & All-in-One">PAIO — AI & All-in-One</div>
+      <h2 data-en="PAIO: Multi-LLM & All-in-One Platform" data-zh="PAIO：多LLM与一体化平台" data-ko="PAIO: Multi-LLM & All-in-One 플랫폼" data-ja="PAIO: マルチLLM & All-in-Oneプラットフォーム">PAIO: Multi-LLM & All-in-One 플랫폼</h2>
+      <p style="font-size:20px;color:var(--text-dim);margin-bottom:16px" data-en="PAIO supports 3 major LLM runtimes and integrates all AUTOSAR development tools into a single environment." data-zh="PAIO支持3种主要LLM运行时，将所有AUTOSAR开发工具集成到单一环境中。" data-ko="PAIO는 3대 LLM 런타임을 지원하며, 모든 AUTOSAR 개발 도구를 단일 환경에 통합합니다." data-ja="PAIOは3大LLMランタイムをサポートし、すべてのAUTOSAR開発ツールを単一環境に統合します。">PAIO는 <strong style="color:var(--teal)">3대 LLM 런타임</strong>을 지원하며, 모든 AUTOSAR 개발 도구를 단일 환경에 통합합니다.</p>
+      <div class="card-grid">
+        <div class="card" style="border-left:4px solid var(--teal)">
+          <h4 data-en="Multi-LLM AI Runtime" data-zh="多LLM AI运行时" data-ko="Multi-LLM AI 런타임" data-ja="マルチLLM AIランタイム">Multi-LLM AI 런타임</h4>
+          <p data-en="Supports Claude, Gemini, and Codex 3 LLM engines. 13 AI Operations with transaction safety and streaming." data-zh="支持Claude、Gemini和Codex 3 LLM引擎。13个AI操作，事务安全和流式传输。" data-ko="Claude, Gemini, Codex 3개 LLM 엔진 지원. 작업별 최적의 AI 엔진을 선택할 수 있습니다. 13가지 AI Operation을 Transaction Safe하게 제공합니다." data-ja="Claude、Gemini、Codex 3つのLLMエンジンをサポート。13のAI OperationをTransaction Safeに提供。">Claude, Gemini, Codex 3개 LLM 엔진 지원. 작업별 최적의 AI 엔진을 선택할 수 있습니다. 13가지 AI Operation을 Transaction Safe하게 제공합니다.</p>
+          <div style="margin-top:10px"><span class="tag tag-teal">Claude</span><span class="tag tag-teal">Gemini</span><span class="tag tag-teal">Codex</span></div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--blue-light)">
+          <h4 data-en="All-in-One Design Environment" data-zh="一体化设计环境" data-ko="All-in-One 설계 환경" data-ja="All-in-One設計環境">All-in-One 설계 환경</h4>
+          <p data-en="System Design, Adaptive/Classic Platform, DataType editor, Signal editor, ECUC BSW config, DBC Import — all in one tool." data-zh="系统设计、Adaptive/Classic Platform、数据类型编辑器、信号编辑器、ECUC BSW配置、DBC导入——全部集成。" data-ko="System Design, Adaptive/Classic Platform 설계, DataType 에디터, Port Interface 에디터, Signal 에디터, ECUC BSW 설정, DBC Import를 하나의 도구에서 처리합니다." data-ja="System Design、Adaptive/Classic Platform、DataTypeエディタ、Signalエディタ、ECUC BSW設定、DBC Importを1つのツールで。">System Design, Adaptive/Classic Platform 설계, DataType 에디터, Port Interface 에디터, Signal 에디터, ECUC BSW 설정, DBC Import를 하나의 도구에서 처리합니다.</p>
+          <div style="margin-top:10px"><span class="tag tag-blue">All-in-One</span><span class="tag tag-blue">R25-11</span></div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--green)">
+          <h4 data-en="Built-in IDE" data-zh="内置IDE" data-ko="내장 IDE" data-ja="内蔵IDE">내장 IDE</h4>
+          <p data-en="Built-in C/C++/Rust IDE for coding directly within PAIO. Markdown editor for documentation." data-zh="内置C/C++/Rust IDE可直接在PAIO中编码。Markdown编辑器用于文档。" data-ko="C/C++/Rust IDE가 내장되어 PAIO 안에서 바로 코딩 가능. Markdown 에디터로 문서 작성까지. 설계에서 구현까지 끊김 없는 워크플로우를 제공합니다." data-ja="C/C++/Rust IDEが内蔵、PAIO内で直接コーディング可能。Markdownエディタも搭載。">C/C++/Rust IDE가 내장되어 PAIO 안에서 바로 코딩 가능. Markdown 에디터로 문서 작성까지. 설계에서 구현까지 끊김 없는 워크플로우를 제공합니다.</p>
+          <div style="margin-top:10px"><span class="tag tag-green">C/C++</span><span class="tag tag-green">Rust</span><span class="tag tag-green">Markdown</span></div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--accent)">
+          <h4 data-en="AI Workflow" data-zh="AI工作流程" data-ko="AI 워크플로우" data-ja="AIワークフロー">AI 워크플로우</h4>
+          <p data-en="Natural language input → Context analysis → Validation → Application. AI understands model context and guarantees referential integrity." data-zh="自然语言输入→上下文分析→验证→应用。AI理解模型上下文并保证引用完整性。" data-ko="자연어 입력 → 컨텍스트 분석 → 검증 → 적용. AI가 모델 컨텍스트를 이해하고 모델을 직접 조작하며, 참조 무결성을 보장하고 세션을 영속적으로 유지합니다." data-ja="自然言語入力→コンテキスト分析→検証→適用。AIがモデルを直接操作し参照整合性を保証。">자연어 입력 → 컨텍스트 분석 → 검증 → 적용. AI가 모델 컨텍스트를 이해하고 모델을 직접 조작하며, 참조 무결성을 보장하고 세션을 영속적으로 유지합니다.</p>
+          <div style="margin-top:10px"><span class="tag tag-accent">13 Operations</span><span class="tag tag-accent">Transaction Safe</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. AI EFFICIENCY (replaces BMS Application) -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="AI Efficiency — Practical Value" data-zh="AI效率——实用价值" data-ko="AI Efficiency — 실무 가치" data-ja="AI効率 — 実務価値">AI Efficiency — 실무 가치</div>
+      <h2 data-en="AI-Driven Work Efficiency Improvement" data-zh="AI驱动的工作效率提升" data-ko="AI로 업무 효율 극대화" data-ja="AIによる業務効率最大化">AI로 업무 효율 극대화</h2>
+      <p style="font-size:22px;color:var(--text-dim);line-height:1.8;margin-bottom:20px" data-en="Concrete efficiency improvements PAIO AI delivers across the AUTOSAR development workflow." data-zh="PAIO AI在AUTOSAR开发工作流中提供的具体效率提升。" data-ko="PAIO AI가 AUTOSAR 개발 워크플로우 전반에서 제공하는 구체적인 효율 향상입니다." data-ja="PAIO AIがAUTOSAR開発ワークフロー全般で提供する具体的な効率向上です。">PAIO AI가 AUTOSAR 개발 워크플로우 전반에서 제공하는 구체적인 효율 향상입니다.</p>
+      <table>
+        <thead><tr><th data-en="Development Task" data-zh="开发任务" data-ko="개발 업무" data-ja="開発業務">개발 업무</th><th data-en="Traditional" data-zh="传统方法" data-ko="기존 방식" data-ja="従来方式">기존 방식</th><th data-en="With PAIO AI" data-zh="使用PAIO AI" data-ko="PAIO AI 적용" data-ja="PAIO AI適用">PAIO AI 적용</th><th data-en="Gain" data-zh="效率" data-ko="효율" data-ja="効率">효율</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="ARXML Creation" data-zh="ARXML Creation" data-ko="ARXML 생성" data-ja="ARXML生成">ARXML 생성</td><td data-en="Manual XML editing" data-zh="手动XML编辑" data-ko="수동 XML 편집" data-ja="手動XML編集">수동 XML 편집</td><td data-en="AI auto-generation" data-zh="AI auto-generation" data-ko="AI 자동 생성" data-ja="AI自動生成">AI 자동 생성</td><td style="color:var(--teal);font-weight:700">80% ↑</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="Network Topology" data-zh="Network Topology" data-ko="네트워크 토폴로지 설계" data-ja="ネットワークトポロジー">네트워크 토폴로지 설계</td><td data-en="Manual analysis" data-zh="手动分析" data-ko="수동 분석 + 문서화" data-ja="手動分析">수동 분석 + 문서화</td><td data-en="AI auto-analysis" data-zh="AI auto-analysis" data-ko="AI 자동 분석 + Summary" data-ja="AI自動分析">AI 자동 분석 + Summary</td><td style="color:var(--teal);font-weight:700">70% ↑</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="SWC-ECU Mapping" data-zh="SWC-ECU Mapping" data-ko="SWC-ECU 매핑" data-ja="SWC-ECUマッピング">SWC-ECU 매핑</td><td data-en="Manual mapping" data-zh="手动映射" data-ko="엔지니어 수동 매핑" data-ja="手動マッピング">엔지니어 수동 매핑</td><td data-en="AI auto-proposal" data-zh="AI auto-proposal" data-ko="AI 자동 제안 + 최적화" data-ja="AI自動提案">AI 자동 제안 + 최적화</td><td style="color:var(--teal);font-weight:700">60% ↑</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="CAN Frame Validation" data-zh="CAN帧验证" data-ko="CAN Frame 검증" data-ja="CANフレーム検証">CAN Frame 검증</td><td data-en="Post-dev testing" data-zh="开发后测试" data-ko="개발 후 테스트" data-ja="開発後テスト">개발 후 테스트</td><td data-en="Real-time AI validation" data-zh="实时AI验证" data-ko="실시간 AI 검증" data-ja="リアルタイムAI検証">실시간 AI 검증</td><td style="color:var(--teal);font-weight:700" data-en="Real-time" data-zh="实时" data-ko="실시간" data-ja="リアルタイム">실시간</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="Design Review Prep" data-zh="Design Review Prep" data-ko="설계 리뷰 준비" data-ja="レビュー準備">설계 리뷰 준비</td><td data-en="Manual docs" data-zh="手动文档" data-ko="수동 문서 작성" data-ja="手動ドキュメント">수동 문서 작성</td><td data-en="PAIO Notes auto-doc" data-zh="PAIO Notes auto-doc" data-ko="PAIO Notes 자동 문서화" data-ja="PAIO Notes自動">PAIO Notes 자동 문서화</td><td style="color:var(--teal);font-weight:700">90% ↑</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="Code Generation" data-zh="Code Generation" data-ko="코드 생성" data-ja="コード生成">코드 생성</td><td data-en="Manual coding" data-zh="手动编码" data-ko="수동 코딩" data-ja="手動コーディング">수동 코딩</td><td data-en="AI auto-generation" data-zh="AI auto-generation" data-ko="AI 코드 자동 생성" data-ja="AIコード自動生成">AI 코드 자동 생성</td><td style="color:var(--teal);font-weight:700">70% ↑</td></tr>
+        </tbody>
+      </table>
+      <div class="highlight" style="border-left-color:var(--teal)">
+        <h4 style="color:var(--teal)" data-en="Overall Efficiency" data-zh="整体效率" data-ko="종합 효율 향상" data-ja="総合効率向上">종합 효율 향상</h4>
+        <p data-en="PAIO AI reduces the overall AUTOSAR development cycle by 60-80%. Engineers focus on high-value creative work instead of repetitive tasks." data-zh="PAIO AI将AUTOSAR整体开发周期缩短60-80%。工程师专注于高价值创造性工作。" data-ko="PAIO AI 도입으로 AUTOSAR 개발 전체 주기를 60~80% 단축할 수 있습니다. 엔지니어는 반복 작업 대신 고부가가치 창의적 업무에 집중할 수 있습니다." data-ja="PAIO AI導入でAUTOSAR開発全体サイクルを60〜80%短縮。エンジニアは創造的業務に集中できます。">PAIO AI 도입으로 AUTOSAR 개발 전체 주기를 <strong style="color:var(--white)">60~80% 단축</strong>할 수 있습니다. 엔지니어는 반복 작업 대신 고부가가치 창의적 업무에 집중할 수 있습니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. SECTION AP -->
+  <div class="slide gradient-ap">
+    <div class="slide-inner" style="text-align:center">
+      <div class="label" data-en="Part 2" data-zh="第二部分" data-ko="Part 2" data-ja="第2部">Part 2</div>
+      <h1 data-en="AUTOSAR Adaptive Platform" data-zh="AUTOSAR Adaptive Platform" data-ko="AUTOSAR Adaptive Platform" data-ja="AUTOSAR Adaptive Platform">AUTOSAR Adaptive Platform</h1>
+      <p class="subtitle" data-en="PopcornSAR's Core Competency — Rust-Native AP Stack" data-zh="PopcornSAR核心竞争力——Rust原生AP协议栈" data-ko="팝콘사의 핵심 경쟁력 — Rust 기반 자체 개발 AP 스택" data-ja="PopcornSARの中核競争力——RustベースAPスタック">팝콘사의 핵심 경쟁력 — Rust 기반 자체 개발 AP 스택</p>
+      <div style="display:flex;justify-content:center;gap:16px;margin-top:32px;flex-wrap:wrap">
+        <span class="tag tag-dark">PARA Stack</span>
+        <span class="tag tag-dark" data-en="Rust-Native Core" data-zh="Rust原生核心" data-ko="Rust 네이티브 코어" data-ja="Rustネイティブコア">Rust 네이티브 코어</span>
+        <span class="tag tag-dark">14 Functional Clusters</span>
+        <span class="tag tag-dark">ASIL-B / ASPICE CL2</span>
+        <span class="tag tag-dark">Cloud-Native</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. PARA STACK -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="Adaptive Platform — PARA Stack" data-zh="Adaptive Platform — PARA Stack" data-ko="Adaptive Platform — PARA Stack" data-ja="Adaptive Platform — PARA Stack">Adaptive Platform — PARA Stack</div>
+      <h2 data-en="Rust-Powered AP Stack: PARA" data-zh="Rust驱动的AP协议栈：PARA" data-ko="Rust 기반 AP 스택: PARA" data-ja="Rustベース APスタック：PARA">Rust 기반 AP 스택: PARA</h2>
+      <p style="font-size:22px;color:var(--text-dim);line-height:1.7;margin-bottom:16px" data-en="PARA is PopcornSAR's Adaptive AUTOSAR middleware stack. Industry-first Rust-native core with ASIL-B and ASPICE CL2 certification." data-zh="PARA是PopcornSAR的Adaptive AUTOSAR中间件栈。业界首个Rust原生核心，已获ASIL-B和ASPICE CL2认证。" data-ko="PARA는 팝콘사가 자체 개발한 Adaptive AUTOSAR 미들웨어 스택입니다. 업계 최초 Rust 네이티브 코어로 컴파일 타임 메모리 안전성을 보장하며, ASIL-B 및 ASPICE CL2 인증을 완료했습니다." data-ja="PARAはPopcornSAR自社開発のAdaptive AUTOSARミドルウェアスタックです。業界初Rustネイティブコアで、ASIL-B/ASPICE CL2認証取得済。">PARA는 팝콘사가 자체 개발한 <strong style="color:var(--white)">Adaptive AUTOSAR 미들웨어 스택</strong>입니다. 업계 최초 <strong style="color:var(--accent)">Rust 네이티브 코어</strong>로 컴파일 타임 메모리 안전성을 보장하며, ASIL-B 및 ASPICE CL2 인증을 완료했습니다.</p>
+      <div class="module-grid">
+        <div class="module">ara::com<div class="sub" data-en="Communication (SOME/IP, DDS, IPC, Zenoh)" data-zh="通信 (SOME/IP, DDS, IPC, Zenoh)" data-ko="통신 (SOME/IP, DDS, IPC, Zenoh)" data-ja="通信 (SOME/IP, DDS, IPC, Zenoh)">통신 (SOME/IP, DDS, IPC, Zenoh)</div></div>
+        <div class="module">ara::exec<div class="sub" data-en="Execution Management" data-zh="执行管理" data-ko="실행 관리" data-ja="実行管理">실행 관리</div></div>
+        <div class="module">ara::diag<div class="sub" data-en="Diagnostics (UDS, DoIP, SOVD)" data-zh="诊断 (UDS, DoIP, SOVD)" data-ko="진단 (UDS, DoIP, SOVD)" data-ja="診断 (UDS, DoIP, SOVD)">진단 (UDS, DoIP, SOVD)</div></div>
+        <div class="module">ara::per<div class="sub" data-en="Persistence" data-zh="持久化" data-ko="데이터 저장" data-ja="データ永続化">데이터 저장</div></div>
+        <div class="module">ara::log<div class="sub" data-en="Logging (DLT)" data-zh="日志 (DLT)" data-ko="로그 & 트레이스 (DLT)" data-ja="ログ (DLT)">로그 & 트레이스 (DLT)</div></div>
+        <div class="module">ara::phm<div class="sub" data-en="Health Monitoring" data-zh="健康监测" data-ko="헬스 모니터링" data-ja="ヘルスモニタリング">헬스 모니터링</div></div>
+        <div class="module">ara::tsync<div class="sub" data-en="Time Sync (802.1AS)" data-zh="时间同步" data-ko="시간 동기화 (802.1AS)" data-ja="時間同期">시간 동기화 (802.1AS)</div></div>
+        <div class="module">ara::core<div class="sub" data-en="Core Types" data-zh="核心类型" data-ko="코어 타입" data-ja="コア型">코어 타입</div></div>
+        <div class="module">ara::iam<div class="sub" data-en="Identity & Access" data-zh="身份管理" data-ko="접근 관리" data-ja="アクセス管理">접근 관리</div></div>
+        <div class="module">ara::ucm<div class="sub" data-en="Update (OTA)" data-zh="更新 (OTA)" data-ko="업데이트 관리 (OTA)" data-ja="更新管理 (OTA)">업데이트 관리 (OTA)</div></div>
+        <div class="module">ara::nm<div class="sub" data-en="Network Mgmt" data-zh="网络管理" data-ko="네트워크 관리" data-ja="ネットワーク管理">네트워크 관리</div></div>
+        <div class="module">ara::sm<div class="sub" data-en="State Mgmt" data-zh="状态管理" data-ko="상태 관리" data-ja="状態管理">상태 관리</div></div>
+        <div class="module">ara::crypto<div class="sub" data-en="Cryptography" data-zh="密码学" data-ko="암호화" data-ja="暗号化">암호화</div></div>
+        <div class="module">ara::idsm<div class="sub" data-en="Intrusion Detection" data-zh="入侵检测" data-ko="침입 탐지" data-ja="侵入検知">침입 탐지</div></div>
+      </div>
+      <div style="display:flex;gap:14px;margin-top:16px;flex-wrap:wrap;justify-content:center">
+        <span class="tag tag-accent" data-en="Rust-Native Core" data-zh="Rust原生核心" data-ko="Rust 네이티브 코어" data-ja="Rustネイティブコア">Rust 네이티브 코어</span>
+        <span class="tag tag-green">ASIL-B</span>
+        <span class="tag tag-blue">ASPICE CL2</span>
+        <span class="tag tag-purple">R25-11</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. PARA WHY RUST (NEW) -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="PARA — Why Rust" data-zh="PARA — 为什么选择Rust" data-ko="PARA — Why Rust" data-ja="PARA — なぜRustか">PARA — Why Rust</div>
+      <h2 data-en="Why Rust for Vehicle Software?" data-zh="为什么车载软件选择Rust？" data-ko="차량 소프트웨어에 왜 Rust인가?" data-ja="車両ソフトウェアにRustを選ぶ理由">차량 소프트웨어에 왜 Rust인가?</h2>
+      <p style="font-size:20px;color:var(--text-dim);margin-bottom:18px" data-en="Fundamentally addressing vehicle software safety. Eliminating memory errors at compile time." data-zh="从根本上解决车载软件安全问题。在编译时消除内存错误。" data-ko="차량 소프트웨어의 안전성과 품질 문제를 근본부터 해결합니다. 런타임 테스트 의존 대신 컴파일 타임에 메모리 오류를 제거합니다." data-ja="車両ソフトウェアの安全性を根本から解決。コンパイル時にメモリエラーを排除。">차량 소프트웨어의 안전성과 품질 문제를 근본부터 해결합니다. 런타임 테스트 의존 대신 컴파일 타임에 메모리 오류를 제거합니다.</p>
+      <div class="card-grid">
+        <div class="card" style="border-left:4px solid var(--green)">
+          <h4 data-en="Post-Production Risk Reduction" data-zh="降低量产后风险" data-ko="양산 후 결함 리스크 감소" data-ja="量産後リスク低減">양산 후 결함 리스크 감소</h4>
+          <p data-en="Use-after-free, buffer overflow blocked at compile stage. Reduces recall and OTA emergency patch risks." data-zh="Use-after-free、buffer overflow在编译阶段被拦截。降低召回和紧急补丁风险。" data-ko="Use-after-free, buffer overflow 등 메모리 버그가 컴파일 단계에서 차단됩니다. 리콜과 OTA 긴급 패치의 리스크를 낮춥니다." data-ja="メモリバグがコンパイル段階でブロック。リコール・OTAパッチリスクを低減。">Use-after-free, buffer overflow 등 메모리 버그가 컴파일 단계에서 차단됩니다. 리콜과 OTA 긴급 패치의 리스크를 낮춥니다.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--blue-light)">
+          <h4 data-en="Multi-core HPC Stability" data-zh="多核HPC稳定性" data-ko="멀티코어 HPC 안정성" data-ja="マルチコアHPC安定性">멀티코어 HPC 안정성</h4>
+          <p data-en="Compiler prevents data races. Stable in complex multi-core ECU environments, reducing verification costs." data-zh="编译器防止数据竞争。在复杂多核ECU环境中稳定运行，减少验证成本。" data-ko="Data race를 컴파일러가 방지합니다. 복잡한 멀티코어 ECU 환경에서도 동시성 버그 없이 안정적으로 동작하므로, 검증 비용과 기간을 절감합니다." data-ja="コンパイラがデータレースを防止。複雑なマルチコアECU環境でも安定動作。">Data race를 컴파일러가 방지합니다. 복잡한 멀티코어 ECU 환경에서도 동시성 버그 없이 안정적으로 동작하므로, 검증 비용과 기간을 절감합니다.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--accent)">
+          <h4 data-en="Safety Without Performance Loss" data-zh="安全不妥协性能" data-ko="성능 타협 없는 안전성" data-ja="性能を犠牲にしない安全性">성능 타협 없는 안전성</h4>
+          <p data-en="Rust's zero-cost abstraction maintains C/C++ equivalent performance. No hardware spec increase needed." data-zh="Rust零成本抽象保持C/C++同等性能。无需提高硬件规格。" data-ko="Rust의 제로 코스트 추상화로 C/C++와 동등한 런타임 성능을 유지합니다. 안전성을 위해 하드웨어 스펙을 높일 필요가 없습니다." data-ja="Rustのゼロコスト抽象化でC/C++同等性能を維持。ハードウェアスペック向上不要。">Rust의 제로 코스트 추상화로 C/C++와 동등한 런타임 성능을 유지합니다. 안전성을 위해 하드웨어 스펙을 높일 필요가 없습니다.</p>
+        </div>
+        <div class="card" style="border-left:4px solid var(--purple)">
+          <h4 data-en="Favorable for Safety Cert" data-zh="有利于安全认证" data-ko="기능 안전 인증에 유리" data-ja="安全認証に有利">기능 안전 인증에 유리</h4>
+          <p data-en="Language-level defect prevention reduces ISO 26262 ASIL certification burden. Fewer defects, shorter certification." data-zh="语言级缺陷预防减少ISO 26262 ASIL认证负担。更少缺陷，更短认证周期。" data-ko="언어 수준의 결함 방지가 ISO 26262 ASIL 인증에서 증명해야 할 안전 케이스를 줄여줍니다. 더 적은 결함, 더 짧은 인증 기간을 기대할 수 있습니다." data-ja="言語レベルの欠陥防止でISO 26262 ASIL認証の安全ケースを削減。">언어 수준의 결함 방지가 ISO 26262 ASIL 인증에서 증명해야 할 안전 케이스를 줄여줍니다. 더 적은 결함, 더 짧은 인증 기간을 기대할 수 있습니다.</p>
+        </div>
+      </div>
+      <div class="highlight" style="border-left-color:var(--accent)">
+        <h4 style="color:var(--accent)" data-en="PARA Differentiation" data-zh="PARA差异化" data-ko="PARA 차별점" data-ja="PARA差別化">PARA 차별점</h4>
+        <p data-en="PARA is the only Rust-native vehicle software platform. Integrates AI/ROS2 via Container Manager and supports SOME/IP, DDS, Zero-copy IPC, Zenoh." data-zh="PARA是业界唯一Rust原生车载软件平台。通过Container Manager集成AI/ROS2，支持多种通信协议。" data-ko="PARA는 업계 유일한 Rust 네이티브 차량용 소프트웨어 플랫폼입니다. Container Manager를 통한 AI/ROS2 통합과 다양한 통신 프로토콜(SOME/IP, DDS, Zero-copy IPC, Zenoh)을 지원합니다." data-ja="PARAは業界唯一のRustネイティブ車両用プラットフォームです。AI/ROS2統合と多様な通信プロトコルをサポート。">PARA는 <strong style="color:var(--white)">업계 유일한 Rust 네이티브</strong> 차량용 소프트웨어 플랫폼입니다. Container Manager를 통한 AI/ROS2 통합과 다양한 통신 프로토콜(SOME/IP, DDS, Zero-copy IPC, Zenoh)을 지원합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. AP DEV ENVIRONMENT -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="Adaptive Platform — Dev Environment" data-zh="Adaptive Platform — 开发环境" data-ko="Adaptive Platform — Development Environment" data-ja="Adaptive Platform — 開発環境">Adaptive Platform — Development Environment</div>
+      <h2 data-en="AP Development Environment" data-zh="AP开发环境" data-ko="AP 개발 환경" data-ja="AP開発環境">AP 개발 환경</h2>
+      <div class="card-grid">
+        <div class="card" style="border-left:4px solid var(--purple)">
+          <h4>PACON IDE</h4>
+          <p data-en="Container-based IDE. Access via SSH and web browser. Provides AP development environment immediately." data-zh="基于容器的IDE。通过SSH和Web浏览器访问。立即提供AP开发环境。" data-ko="컨테이너 기반 통합 개발 환경. VNC 없이 SSH 터미널과 웹 브라우저로 접속. Adaptive AUTOSAR 전용 개발·빌드·디버깅 환경을 즉시 제공합니다." data-ja="コンテナベースのIDE。SSHとWebブラウザでアクセス。AP開発環境を即座に提供。">컨테이너 기반 통합 개발 환경. VNC 없이 SSH 터미널과 웹 브라우저로 접속. Adaptive AUTOSAR 전용 개발·빌드·디버깅 환경을 즉시 제공합니다.</p>
+          <div style="margin-top:10px"><span class="tag tag-purple">Container-based</span><span class="tag tag-blue">Cloud-Native</span></div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--blue-light)">
+          <h4>Virtual ECU</h4>
+          <p data-en="Test ECU functionality with software only. Docker-based multi-vECU system-level verification." data-zh="仅通过软件测试ECU功能。基于Docker的多vECU系统级验证。" data-ko="소프트웨어만으로 ECU 기능을 테스트하는 가상 ECU 환경. Docker 컨테이너 기반으로 다수의 vECU를 통합하여 시스템 레벨 검증이 가능합니다." data-ja="ソフトウェアのみでECU機能テスト。Docker基盤の複数vECUシステム検証。">소프트웨어만으로 ECU 기능을 테스트하는 가상 ECU 환경. Docker 컨테이너 기반으로 다수의 vECU를 통합하여 시스템 레벨 검증이 가능합니다.</p>
+          <div style="margin-top:10px"><span class="tag tag-blue">Docker</span><span class="tag tag-green">SOME/IP</span><span class="tag tag-accent">Flutter HMI</span></div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--green)">
+          <h4 data-en="AP Workflow" data-zh="AP工作流程" data-ko="AP 워크플로우" data-ja="APワークフロー">AP 워크플로우</h4>
+          <p data-en="Application Design → Manifest Design → Code Generation → vECU Testing → Deployment. 30% workload reduction." data-zh="应用设计→清单设计→代码生成→vECU测试→部署。工作量减少30%。" data-ko="Application Design → Manifest Design → Code Generation → vECU 테스트 → 배포. 코드 생성기 활용 시 작업량 30% 절감됩니다." data-ja="Application Design → Manifest Design → Code Generation → vECU Testing → Deployment。作業量30%削減。">Application Design → Manifest Design → Code Generation → vECU 테스트 → 배포. 코드 생성기 활용 시 <strong style="color:var(--white)">작업량 30% 절감</strong>됩니다.</p>
+          <div style="margin-top:10px"><span class="tag tag-green">30% Efficiency</span><span class="tag tag-blue">C++ Auto-generation</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12. TOOL-CHAIN COMPARISON -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="Complete Tool-chain" data-zh="完整工具链" data-ko="Complete Tool-chain" data-ja="完全なツールチェーン">Complete Tool-chain</div>
+      <h2 data-en="Complete Tool-chain Comparison" data-zh="完整工具链比较" data-ko="완전한 Tool-chain 비교" data-ja="完全なツールチェーン比較">완전한 Tool-chain 비교</h2>
+      <p style="font-size:22px;color:var(--text-dim);margin-bottom:20px" data-en="PopcornSAR is the only company with self-developed AI tools + middleware + IDE + vECU." data-zh="PopcornSAR是唯一拥有自主AI工具+中间件+IDE+vECU的公司。" data-ko="팝콘사는 AI 설계 도구 + 미들웨어 스택 + IDE + 가상 ECU를 모두 자체 개발하여 보유한 유일한 기업입니다." data-ja="PopcornSARはAI設計ツール+ミドルウェア+IDE+vECUを自社開発する唯一の企業です。">팝콘사는 AI 설계 도구 + 미들웨어 스택 + IDE + 가상 ECU를 <strong style="color:var(--white)">모두 자체 개발</strong>하여 보유한 유일한 기업입니다.</p>
+      <table>
+        <thead><tr><th data-en="Category" data-zh="类别" data-ko="영역" data-ja="カテゴリ">영역</th><th data-en="PopcornSAR" data-zh="PopcornSAR" data-ko="팝콘사" data-ja="PopcornSAR">팝콘사</th><th>Vector</th><th>ETAS</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="Modeling Tool" data-zh="建模工具" data-ko="모델링 도구" data-ja="モデリングツール">모델링 도구</td><td style="color:var(--teal);font-weight:700" data-en="PAIO (AI-enabled) ✓" data-zh="PAIO (AI驱动) ✓" data-ko="PAIO (AI 탑재) ✓" data-ja="PAIO (AI搭載) ✓">PAIO (AI 탑재) ✓</td><td>PREEvision / DaVinci</td><td>ISOLAR</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="AI Design Automation" data-zh="AI设计自动化" data-ko="AI 설계 자동화" data-ja="AI設計自動化">AI 설계 자동화</td><td style="color:var(--teal);font-weight:700" data-en="PAIO Robo AI ✓" data-zh="PAIO Robo AI ✓" data-ko="PAIO Robo AI ✓" data-ja="PAIO Robo AI ✓">PAIO Robo AI ✓</td><td style="color:var(--red)" data-en="✗ N/A" data-zh="✗ 不支持" data-ko="✗ 미지원" data-ja="✗ 非対応">✗ 미지원</td><td style="color:var(--red)" data-en="✗ N/A" data-zh="✗ 不支持" data-ko="✗ 미지원" data-ja="✗ 非対応">✗ 미지원</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="CP BSW Stack" data-zh="CP BSW堆栈" data-ko="CP BSW 스택" data-ja="CP BSWスタック">CP BSW 스택</td><td style="color:var(--green);font-weight:700" data-en="Partner ✓" data-zh="合作伙伴 ✓" data-ko="파트너 연계 ✓" data-ja="パートナー連携 ✓">파트너 연계 ✓</td><td>MICROSAR</td><td>RTA-BSW</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="AP Middleware" data-zh="AP中间件" data-ko="AP 미들웨어" data-ja="APミドルウェア">AP 미들웨어</td><td style="color:var(--green);font-weight:700" data-en="PARA (Rust) ✓" data-zh="PARA (Rust, 自研) ✓" data-ko="PARA (Rust, 자체개발) ✓" data-ja="PARA (Rust, 自社開発) ✓">PARA (Rust, 자체개발) ✓</td><td>MICROSAR Adaptive</td><td>—</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="Ethernet Design" data-zh="Ethernet Design" data-ko="Ethernet Design" data-ja="Ethernet設計">Ethernet Design</td><td style="color:var(--green);font-weight:700" data-en="✓ Supported" data-zh="✓ 支持" data-ko="✓ 지원" data-ja="✓ サポート">✓ 지원</td><td style="color:var(--red)" data-en="✗ N/A" data-zh="✗ 不支持" data-ko="✗ 미지원" data-ja="✗ 非対応">✗ 미지원</td><td style="color:var(--red)" data-en="✗ N/A" data-zh="✗ 不支持" data-ko="✗ 미지원" data-ja="✗ 非対応">✗ 미지원</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="Diagnostic Design" data-zh="Diagnostic Design" data-ko="Diagnostic Design" data-ja="診断設計">Diagnostic Design</td><td style="color:var(--green);font-weight:700" data-en="✓ Supported" data-zh="✓ 支持" data-ko="✓ 지원" data-ja="✓ サポート">✓ 지원</td><td style="color:var(--red)" data-en="✗ N/A" data-zh="✗ 不支持" data-ko="✗ 미지원" data-ja="✗ 非対応">✗ 미지원</td><td style="color:var(--red)" data-en="✗ N/A" data-zh="✗ 不支持" data-ko="✗ 미지원" data-ja="✗ 非対応">✗ 미지원</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="Dev IDE" data-zh="开发IDE" data-ko="개발 IDE" data-ja="開発IDE">개발 IDE</td><td style="color:var(--green);font-weight:700" data-en="PACON IDE ✓" data-zh="PACON IDE ✓" data-ko="PACON IDE ✓" data-ja="PACON IDE ✓">PACON IDE ✓</td><td style="color:var(--red)">—</td><td style="color:var(--red)">—</td></tr>
+          <tr><td style="font-weight:600;color:var(--white)" data-en="Virtual ECU" data-zh="虚拟ECU" data-ko="Virtual ECU" data-ja="仮想ECU">Virtual ECU</td><td style="color:var(--green);font-weight:700" data-en="vECU ✓" data-zh="vECU ✓" data-ko="vECU ✓" data-ja="vECU ✓">vECU ✓</td><td style="color:var(--red)">—</td><td style="color:var(--red)">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 13. PRODUCTION TRACK RECORD -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="Production Track Record" data-zh="量产实绩" data-ko="Production Track Record" data-ja="量産実績">Production Track Record</div>
+      <h2 data-en="Proven Production Track Record" data-zh="经过验证的量产实绩" data-ko="검증된 양산 실적" data-ja="実証済みの量産実績">검증된 양산 실적</h2>
+      <div class="card-grid-3">
+        <div class="card" style="border-top:4px solid var(--blue-light);text-align:center">
+          <div style="font-size:48px;font-weight:900;color:var(--white);margin-bottom:10px">Volvo</div>
+          <h4 data-en="ECU Production" data-zh="ECU量产" data-ko="ECU 양산 프로젝트" data-ja="ECU量産">ECU 양산 프로젝트</h4>
+          <p data-en="Europe Volvo vehicle ECU production. AUTOSAR-based real vehicle verification." data-zh="欧洲Volvo车辆ECU量产。AUTOSAR实车验证。" data-ko="유럽 Volvo 차량용 ECU 양산 적용. AUTOSAR 기반 실차 검증 완료." data-ja="欧州Volvo車両用ECU量産。AUTOSAR実車検証完了。">유럽 Volvo 차량용 ECU 양산 적용. AUTOSAR 기반 실차 검증 완료.</p>
+          <div style="margin-top:10px"><span class="tag tag-blue" data-en="Europe" data-zh="欧洲" data-ko="유럽 양산" data-ja="欧州">유럽 양산</span></div>
+        </div>
+        <div class="card" style="border-top:4px solid var(--green);text-align:center">
+          <div style="font-size:48px;font-weight:900;color:var(--white);margin-bottom:10px">VW</div>
+          <h4 data-en="Classic AUTOSAR Production" data-zh="Classic AUTOSAR量产" data-ko="Classic AUTOSAR 양산" data-ja="Classic AUTOSAR量産">Classic AUTOSAR 양산</h4>
+          <p data-en="VW Classic AUTOSAR production with LG Electronics." data-zh="与LG电子合作VW Classic AUTOSAR量产。" data-ko="LG전자와 협력하여 VW 차량용 Classic AUTOSAR 양산 프로젝트 수행." data-ja="LGエレクトロニクスと協力してVW Classic AUTOSAR量産。">LG전자와 협력하여 VW 차량용 Classic AUTOSAR 양산 프로젝트 수행.</p>
+          <div style="margin-top:10px"><span class="tag tag-green" data-en="CP Production" data-zh="CP量产" data-ko="CP 양산" data-ja="CP量産">CP 양산</span></div>
+        </div>
+        <div class="card" style="border-top:4px solid var(--accent);text-align:center">
+          <div style="font-size:48px;font-weight:900;color:var(--white);margin-bottom:10px">DENSO</div>
+          <h4 data-en="Full Tool Suite Export" data-zh="全套工具出口" data-ko="풀셋 도구 수출" data-ja="フルセットツール輸出">풀셋 도구 수출</h4>
+          <p data-en="Complete AUTOSAR tool set export to DENSO Japan. #1 vs Vector/dSPACE." data-zh="向日本DENSO出口完整AUTOSAR工具集。排名第1。" data-ko="일본 DENSO에 AUTOSAR 전체 도구 세트 수출. Vector·dSPACE 경쟁 1위." data-ja="日本DENSOへ完全ツールセット輸出。Vector・dSPACE競争1位。">일본 DENSO에 AUTOSAR 전체 도구 세트 수출. Vector·dSPACE 경쟁 1위.</p>
+          <div style="margin-top:10px"><span class="tag tag-accent" data-en="Global" data-zh="全球" data-ko="글로벌 검증" data-ja="グローバル">글로벌 검증</span></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:22px;margin-top:22px;flex-wrap:wrap;justify-content:center">
+        <div style="background:var(--bg-card);border:1px solid var(--border);padding:16px 32px;border-radius:14px;text-align:center">
+          <div style="font-size:34px;font-weight:800;color:var(--white)" data-en="10+ Years" data-zh="10+年" data-ko="10+년" data-ja="10+年">10+년</div>
+          <div style="font-size:16px;color:var(--text-muted)" data-en="AUTOSAR Technology" data-zh="AUTOSAR技术积累" data-ko="AUTOSAR 기술 축적" data-ja="AUTOSAR技術">AUTOSAR 기술 축적</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);padding:16px 32px;border-radius:14px;text-align:center">
+          <div style="font-size:34px;font-weight:800;color:var(--white)" data-en="408 People" data-zh="408人" data-ko="408명" data-ja="408名">408명</div>
+          <div style="font-size:16px;color:var(--text-muted)" data-en="LG Training" data-zh="LG培训" data-ko="LG전자 교육 이수" data-ja="LG研修">LG전자 교육 이수</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);padding:16px 32px;border-radius:14px;text-align:center">
+          <div style="font-size:34px;font-weight:800;color:var(--white)" data-en="5+ Countries" data-zh="5+国" data-ko="5개국+" data-ja="5カ国+">5개국+</div>
+          <div style="font-size:16px;color:var(--text-muted)" data-en="Global Export" data-zh="全球出口" data-ko="글로벌 도구 수출" data-ja="グローバル輸出">글로벌 도구 수출</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);padding:16px 32px;border-radius:14px;text-align:center">
+          <div style="font-size:34px;font-weight:800;color:var(--white)">A-SPICE</div>
+          <div style="font-size:16px;color:var(--text-muted)" data-en="Process Cert" data-zh="过程认证" data-ko="프로세스 인증" data-ja="プロセス認証">프로세스 인증</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14. USE CASES (NEW) -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="Use Cases" data-zh="应用案例" data-ko="Use Cases" data-ja="ユースケース">Use Cases</div>
+      <h2 data-en="Vehicle Architecture Application Cases" data-zh="车辆架构应用案例" data-ko="다양한 차량 아키텍처 적용 사례" data-ja="車両アーキテクチャ適用事例">다양한 차량 아키텍처 적용 사례</h2>
+      <div class="card-grid-3">
+        <div class="card" style="border-top:3px solid var(--blue-light)">
+          <h4 data-en="VCU & Zonal" data-zh="VCU与区域" data-ko="VCU & Zonal Architecture" data-ja="VCU & Zonal">VCU & Zonal Architecture</h4>
+          <p data-en="SOA-based communication between ADAS, IVI, ZONE ECU. Core platform for centralized architecture." data-zh="ADAS、IVI、ZONE ECU间SOA通信。集中式架构核心平台。" data-ko="Vehicle Computer 중심 ADAS, IVI, ZONE ECU 간 SOA 통신. 중앙 집중형 아키텍처 전환의 핵심 플랫폼." data-ja="ADAS、IVI、ZONE ECU間SOA通信。集中型アーキテクチャのコアプラットフォーム。">Vehicle Computer 중심 ADAS, IVI, ZONE ECU 간 SOA 통신. 중앙 집중형 아키텍처 전환의 핵심 플랫폼.</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--green)">
+          <h4 data-en="OTA Update" data-zh="OTA更新" data-ko="OTA 소프트웨어 업데이트" data-ja="OTAアップデート">OTA 소프트웨어 업데이트</h4>
+          <p data-en="Vehicle-wide remote software update via UCM. Safe update workflow with State Management." data-zh="通过UCM全车远程更新。通过State Management确保安全更新。" data-ko="UCM과 OTA Client로 차량 전체 원격 업데이트. State Management 연동 안전한 워크플로우 검증." data-ja="UCMとOTA Clientで車両全体のリモートアップデート。安全なワークフロー検証。">UCM과 OTA Client로 차량 전체 원격 업데이트. State Management 연동 안전한 워크플로우 검증.</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--accent)">
+          <h4 data-en="AI on HPC" data-zh="HPC上的AI" data-ko="AI with Container on HPC" data-ja="HPC上のAI">AI with Container on HPC</h4>
+          <p data-en="Docker-based AI inference integrated with AUTOSAR services. Flexible in-vehicle AI deployment." data-zh="Docker AI推理与AUTOSAR服务集成。灵活的车载AI部署。" data-ko="Docker 컨테이너 AI 추론과 AUTOSAR 서비스 연동. HPC에서 차량 AI 워크로드의 유연한 배포 검증." data-ja="DockerベースAI推論とAUTOSARサービス連携。車載AIの柔軟なデプロイ。">Docker 컨테이너 AI 추론과 AUTOSAR 서비스 연동. HPC에서 차량 AI 워크로드의 유연한 배포 검증.</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--purple)">
+          <h4 data-en="BMS on SOA" data-zh="SOA上的BMS" data-ko="BMS on SOA & Simulink" data-ja="SOA上のBMS">BMS on SOA & Simulink</h4>
+          <p data-en="Legacy BMS SOA migration from MATLAB/Simulink. Leveraging model-based design assets." data-zh="MATLAB/Simulink传统BMS的SOA迁移。利用模型设计资产。" data-ko="MATLAB/Simulink 레거시 BMS의 SOA 마이그레이션. 기존 모델 설계 자산 활용 전환 사례 확보." data-ja="MATLAB/SimulinkレガシーBMSのSOA移行。モデルベース設計資産活用。">MATLAB/Simulink 레거시 BMS의 SOA 마이그레이션. 기존 모델 설계 자산 활용 전환 사례 확보.</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--teal)">
+          <h4 data-en="ZONE ECU S2S" data-zh="ZONE ECU S2S" data-ko="Signal-to-Service Gateway" data-ja="S2Sゲートウェイ">Signal-to-Service Gateway</h4>
+          <p data-en="CAN to Ethernet SOA conversion. ROS(DDS) protocol conversion demonstrated." data-zh="CAN到以太网SOA转换。ROS(DDS)协议转换已演示。" data-ko="CAN 레거시 신호를 Ethernet SOA 서비스로 변환하는 S2S 게이트웨이. ROS(DDS) 프로토콜 변환 데모." data-ja="CANレガシー信号をEthernet SOAに変換するS2Sゲートウェイ。ROS(DDS)変換デモ。">CAN 레거시 신호를 Ethernet SOA 서비스로 변환하는 S2S 게이트웨이. ROS(DDS) 프로토콜 변환 데모.</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--red)">
+          <h4 data-en="Global SDV API" data-zh="全球SDV API" data-ko="글로벌 SDV API 대응" data-ja="グローバルSDV API">글로벌 SDV API 대응</h4>
+          <p data-en="China CAAM, Japan OSDVI SDV API compliance. Single platform for global standards." data-zh="中国CAAM、日本OSDVI SDV API合规。单一平台满足全球标准。" data-ko="중국 CAAM, 일본 OSDVI 등 SDV API 표준 대응. 하나의 플랫폼으로 글로벌 규격 충족." data-ja="中国CAAM、日本OSDVI等SDV API標準対応。1つのプラットフォームでグローバル対応。">중국 CAAM, 일본 OSDVI 등 SDV API 표준 대응. 하나의 플랫폼으로 글로벌 규격 충족.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15. COLLABORATION PROPOSAL (NEW) -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="label" data-en="Collaboration Proposal" data-zh="合作建议" data-ko="Collaboration Proposal" data-ja="協力提案">Collaboration Proposal</div>
+      <h2 data-en="AI-Powered Collaboration Proposal" data-zh="AI驱动的合作建议" data-ko="AI 활용 협력 제안" data-ja="AI活用協力提案">AI 활용 협력 제안</h2>
+      <p style="font-size:22px;color:var(--text-dim);line-height:1.8;margin-bottom:20px" data-en="How PopcornSAR can improve your AUTOSAR development efficiency through AI." data-zh="PopcornSAR如何通过AI提升您的AUTOSAR开发效率。" data-ko="AI 기술을 통해 장성모터스의 AUTOSAR 개발 효율을 높일 수 있는 팝콘사의 협력 방안입니다." data-ja="AI技術を通じて長城汽車のAUTOSAR開発効率を高めるPopcornSARの協力方案です。">AI 기술을 통해 장성모터스의 AUTOSAR 개발 효율을 높일 수 있는 팝콘사의 협력 방안입니다.</p>
+      <div class="card-grid">
+        <div class="card" style="border-left:4px solid var(--teal)">
+          <h4 data-en="PAIO AI Tool Deployment" data-zh="PAIO AI工具部署" data-ko="PAIO AI 도구 도입" data-ja="PAIO AIツール導入">PAIO AI 도구 도입</h4>
+          <p data-en="Deploy PAIO for AI-automated AUTOSAR design. 3 LLM engines provide optimal AI support." data-zh="部署PAIO实现AI自动化AUTOSAR设计。3种LLM引擎提供最优AI支持。" data-ko="PAIO 도입으로 AUTOSAR 설계를 AI로 자동화. 3대 LLM 엔진(Claude/Gemini/Codex)이 개발 업무별 최적의 AI 지원을 제공합니다." data-ja="PAIO導入でAUTOSAR設計をAI自動化。3大LLMエンジンが最適なAI支援を提供。"><strong style="color:var(--white)">PAIO</strong> 도입으로 AUTOSAR 설계를 AI로 자동화. 3대 LLM 엔진(Claude/Gemini/Codex)이 개발 업무별 최적의 AI 지원을 제공합니다.</p>
+          <div style="margin-top:10px"><span class="tag tag-teal">PAIO AI</span><span class="tag tag-teal">Multi-LLM</span></div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--blue-light)">
+          <h4 data-en="PARA Rust Platform" data-zh="PARA Rust平台" data-ko="PARA Rust 플랫폼" data-ja="PARA Rustプラットフォーム">PARA Rust 플랫폼</h4>
+          <p data-en="Rust-native PARA for next-gen vehicle software. Compile-time memory safety. ASIL-B / ASPICE CL2." data-zh="Rust原生PARA用于下一代车辆软件。编译时内存安全。ASIL-B/ASPICE CL2。" data-ko="Rust 네이티브 PARA로 차세대 차량 소프트웨어 구축. 컴파일 타임 메모리 안전성으로 런타임 결함 원천 제거. ASIL-B / ASPICE CL2 인증 완료." data-ja="Rustネイティブ PARAで次世代車両ソフトウェア構築。コンパイル時メモリ安全性。ASIL-B/ASPICE CL2。">Rust 네이티브 <strong style="color:var(--white)">PARA</strong>로 차세대 차량 소프트웨어 구축. 컴파일 타임 메모리 안전성으로 런타임 결함 원천 제거. ASIL-B / ASPICE CL2 인증 완료.</p>
+          <div style="margin-top:10px"><span class="tag tag-blue">Rust</span><span class="tag tag-blue">ASIL-B</span></div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--green)">
+          <h4 data-en="CP/AP Technical Support" data-zh="CP/AP技术支持" data-ko="CP/AP 기술 지원" data-ja="CP/AP技術サポート">CP/AP 기술 지원</h4>
+          <p data-en="Technical consulting based on Volvo/VW production experience. A-SPICE certified process." data-zh="基于Volvo/VW量产经验的技术咨询。A-SPICE认证流程。" data-ko="Volvo/VW 양산 경험 기반 기술 컨설팅 및 개발 지원. A-SPICE 인증 개발 프로세스로 품질을 보장합니다." data-ja="Volvo/VW量産経験ベースの技術コンサルティング。A-SPICE認証プロセス。">Volvo/VW 양산 경험 기반 기술 컨설팅 및 개발 지원. A-SPICE 인증 개발 프로세스로 품질을 보장합니다.</p>
+          <div style="margin-top:10px"><span class="tag tag-green">Volvo/VW</span><span class="tag tag-green">A-SPICE</span></div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--accent)">
+          <h4 data-en="Training & Education" data-zh="培训教育" data-ko="교육 & 트레이닝" data-ja="教育&トレーニング">교육 & 트레이닝</h4>
+          <p data-en="Customized AUTOSAR and AI tool training. 408 engineers trained at LG Electronics." data-zh="定制AUTOSAR和AI工具培训。已为LG电子培训408名工程师。" data-ko="맞춤형 AUTOSAR 및 AI 도구 교육 프로그램. LG전자 408명 교육 이수 실적. 실무 중심 핸즈온 프로그램을 제공합니다." data-ja="カスタマイズAUTOSAR・AIツール教育。LGエレクトロニクス408名研修実績。">맞춤형 AUTOSAR 및 AI 도구 교육 프로그램. LG전자 408명 교육 이수 실적. 실무 중심 핸즈온 프로그램을 제공합니다.</p>
+          <div style="margin-top:10px"><span class="tag tag-accent" data-en="408 Trained" data-zh="408人培训" data-ko="408명 교육" data-ja="408名教育">408명 교육</span><span class="tag tag-accent">Hands-on</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 16. CLOSING -->
+  <div class="slide cover">
+    <div class="slide-inner" style="text-align:center">
+      <div class="label" style="color:var(--accent)" data-en="Thank You" data-zh="谢谢" data-ko="Thank You" data-ja="ありがとうございます">Thank You</div>
+      <h1 data-en="Thank You" data-zh="谢谢" data-ko="감사합니다" data-ja="ありがとうございます">감사합니다</h1>
+      <p class="subtitle" style="max-width:800px;margin:0 auto 36px" data-en="PopcornSAR, with CP production experience, Rust-based AP technology, and PAIO AI, is your ideal partner for AUTOSAR development efficiency." data-zh="拥有CP量产经验、Rust基AP技术和PAIO AI的PopcornSAR，是提升AUTOSAR开发效率的理想合作伙伴。" data-ko="CP 양산 경험과 Rust 기반 AP 자체 기술력, 그리고 PAIO AI를 겸비한 팝콘사가 AUTOSAR 개발 효율 향상의 최적 파트너가 되겠습니다." data-ja="CP量産経験とRustベースAP自社技術力、そしてPAIO AIを備えたPopcornSARが、AUTOSAR開発効率向上の最適パートナーとなります。">CP 양산 경험과 Rust 기반 AP 자체 기술력, 그리고 PAIO AI를 겸비한 팝콘사가 AUTOSAR 개발 효율 향상의 최적 파트너가 되겠습니다.</p>
+      <div style="width:120px;height:4px;background:var(--accent);margin:0 auto 40px;border-radius:2px"></div>
+      <div style="display:flex;gap:40px;justify-content:center;margin-top:16px;flex-wrap:wrap">
+        <div style="text-align:center">
+          <div style="font-size:18px;opacity:.4" data-en="Email" data-zh="电子邮件" data-ko="이메일" data-ja="メール">이메일</div>
+          <div style="font-size:26px;font-weight:700;margin-top:6px">contact@popcornsar.com</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:18px;opacity:.4" data-en="Website" data-zh="网站" data-ko="웹사이트" data-ja="ウェブサイト">웹사이트</div>
+          <div style="font-size:26px;font-weight:700;margin-top:6px">autosar.io</div>
+        </div>
+      </div>
+      <p style="font-size:18px;opacity:.25;margin-top:36px" data-en="PopcornSAR Co., Ltd." data-zh="PopcornSAR Co., Ltd." data-ko="주식회사 팝콘사 · PopcornSAR Co., Ltd." data-ja="PopcornSAR Co., Ltd.">주식회사 팝콘사 · PopcornSAR Co., Ltd.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="slide-nav">
+  <span id="slideCounter" class="slide-counter">1 / 16</span>
+  <div id="navDots" class="nav-dots"></div>
+</div>
+<div class="nav-hint" data-en="← → Arrow keys or click to navigate" data-zh="← → 方向键或点击导航" data-ko="← → 방향키 또는 클릭으로 이동" data-ja="← → 矢印キーまたはクリックで移動">← → 방향키 또는 클릭으로 이동</div>
+
+<script>
+let currentLang='ko';
+const fontMap={zh:"'Noto Sans SC'",ja:"'Noto Sans JP'",ko:"'Pretendard'",en:"'Pretendard'"};
+function setLang(lang){
+  currentLang=lang;
+  document.querySelectorAll('.lang-btn').forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.lang===lang);
+  });
+  document.querySelectorAll('[data-'+lang+']').forEach(el=>{
+    const val=el.getAttribute('data-'+lang);
+    if(val!==null) el.textContent=val;
+  });
+  document.body.style.fontFamily=fontMap[lang]+",-apple-system,sans-serif";
+}
+const slides=document.querySelectorAll('.slide'),bar=document.getElementById('progressBar'),counter=document.getElementById('slideCounter'),dots=document.getElementById('navDots');
+let cur=0;const total=slides.length;
+for(let i=0;i<total;i++){const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>go(i);dots.appendChild(d)}
+function go(i){if(i<0||i>=total)return;slides[cur].classList.remove('active');dots.children[cur].classList.remove('active');cur=i;slides[cur].classList.add('active');dots.children[cur].classList.add('active');bar.style.width=((cur+1)/total*100)+'%';counter.textContent=(cur+1)+' / '+total}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(cur+1)}if(e.key==='ArrowLeft'){e.preventDefault();go(cur-1)}if(e.key==='Home'){e.preventDefault();go(0)}if(e.key==='End'){e.preventDefault();go(total-1)}});
+document.addEventListener('click',e=>{if(e.target.closest('.nav-dots')||e.target.closest('a')||e.target.closest('.lang-switcher'))return;e.clientX>window.innerWidth/2?go(cur+1):go(cur-1)});
+let tx=0;document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX});document.addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>50){d>0?go(cur+1):go(cur-1)}});
+go(0);
+setLang('ko');
+</script>
+</body>
+</html>
